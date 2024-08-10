@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.route.js';
+import restaurantRouter from './routes/restaurant.route.js'
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ mongoose.connect(process.env.MONGO_URL)
   });
 
 app.use('/api/auth', authRouter);
+app.use('/api/restaurant', restaurantRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
