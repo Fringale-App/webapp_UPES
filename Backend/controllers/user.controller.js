@@ -38,21 +38,25 @@ export const register = async (req, res, next) => {
   };
   
 
-export const signin = async (req, res, next) => {
-    try {
-      const { name,email,type } = req.body;
-      const user = await User.findOne({ email });
-      //checking for  user type
-      
-      if (!user)
-        return res.json({ msg: "Incorrect name or email", status: false });
-       
-      if(user.type !== type){
-            return res.json({ msg: `You don't have ${type} access `, status: false });
-        }
+  export const signin = async (req,res,next)=>{
 
-      return res.json({ status: true, user });
-    } catch (ex) {
-      next(ex);
-    }
+    try { 
+    const {email,password} = req.body;
+    console.log("Request Body:", req.body);
+     const validUser = await User.findOne({email})
+     if(!validUser){
+         return next("Not a valid email")
+     }
+     
+     const isPassword = bcrypt.compareSync(password,validUser.password)
+     console.log(validUser);
+     const {password:pass ,...rest} = validUser._doc
+     if(!isPassword){
+         return next("Not a valid password")
+     }
+        res.json({success:true,message:"Login Successful",data:rest})
+     
+ }catch(err){
+    next(err);
+}
   }
