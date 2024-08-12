@@ -3,8 +3,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import authRouter from './routes/auth.route.js';
+import userRouter from './routes/user.route.js';
 import restaurantRouter from './routes/restaurant.route.js'
+import itemRouter from './routes/item.route.js'
 
 dotenv.config();
 
@@ -25,8 +26,9 @@ mongoose.connect(process.env.MONGO_URL)
     console.error('Failed to connect to MongoDB', err);
   });
 
-app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 app.use('/api/restaurant', restaurantRouter);
+app.use('/api/item', itemRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
