@@ -12,7 +12,7 @@ export const register = async (req, res, next) => {
         return res.json({ msg: "Email already used", status: false });
       }
       
-      if (!password || !name||!type) {
+      if (!password || !name) {
         return res.status(400).json({ msg: "All Fields are required", status: false });
       }
       
@@ -24,7 +24,6 @@ export const register = async (req, res, next) => {
         email,
         name,
         password: hashedPassword,
-        type: type || 'customer', // Default type to 'customer' if not provided
       });
   
       // Log user to ensure the object is correct
