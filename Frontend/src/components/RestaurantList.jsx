@@ -15,6 +15,12 @@ const RestaurantList = () => {
 
     return (
         <div className="p-4">
+            <div className='flex justify-between items-center'>
+                <h3 className="text-xl mb-2 font-semibold">Explore Restaurant</h3>
+                <p className="text-xs text-green-600">View All {">>"}</p>
+            </div>
+            
+
             {restaurantArray.map((restaurant, index) => (
                 <RestaurantCard key={index} restaurant={restaurant} />
             ))}

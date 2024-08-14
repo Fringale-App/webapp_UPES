@@ -3,6 +3,7 @@ import { FaSearch, FaHeart, FaUserCircle } from "react-icons/fa";
 import logo from '../../Images/logo.png';
 import heart from '../../Images/heart.svg';
 import profile from '../../Images/profile.svg';
+import weather from '../../Images/weather.png'
 
 const WeatherHeader = () => {
     const [value,setValue] = useState('');
@@ -36,12 +37,12 @@ const WeatherHeader = () => {
       </div>
 
       {/* Weather and time section */}
-      <div className="mt-4 p-4 bg-blue-200 rounded-lg flex items-center justify-between">
-        <div>
-          <p className="text-sm">Raining 24°C</p>
-          <p className="text-xs">Sun, 10 Aug</p>
+      <div className="mt-4 p-4 bg-blue-200 rounded-lg flex items-center min-h-[70px] justify-between bg-cover bg-center w-full relative" style={{ backgroundImage: `url(${weather})` }}>
+        <div className="absolute top-7">
+          <p className=" text-sm font-bold">Raining 24°C</p>
+          <p className="text-xs font-bold">Sun, 10 Aug</p>
         </div>
-        <p className="text-sm">9:41 PM</p>
+        <p className="text-sm absolute bottom-2 right-5 font-bold">9:41 PM</p>
       </div>
     </div>
   );
