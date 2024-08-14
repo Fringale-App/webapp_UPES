@@ -31,7 +31,7 @@ const WeatherHeader = () => {
     }
     const search = async (city)=>{
       try{
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=110df3663b2a8e49823808bfc64cdd2f`
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_WEATHER_API}`
         console.log(url)
         const response = await fetch(url)
         const data = await response.json()
