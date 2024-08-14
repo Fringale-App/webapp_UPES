@@ -1,17 +1,17 @@
 // src/App.jsx
 import React from 'react';
-import Header from './components/Header';
-import Search from './components/Search';
-
+import {BrowserRouter,Routes,Route}from 'react-router-dom'
+import WeatherHeader from './components/WeatherHeader';
+import FoodOptions from './components/FoodOptions';
+import Home from './pages/Home';
 function App() {
   return (
-    <div>
-      <Header/>
-      <div className='p-4'>
-        <Search/>
-      </div>
-      
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        
+      </Routes>
+    </BrowserRouter>
   );
 }
 
