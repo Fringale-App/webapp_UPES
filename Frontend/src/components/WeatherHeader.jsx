@@ -9,7 +9,7 @@ import clear_icon from '../../Images/clear.png'
 
 const WeatherHeader = () => {
     const [value,setValue] = useState('');
-    const [weatherData , setWeatherData] = useState(false)
+    const [weatherData , setWeatherData] = useState("")
     const [dateTime, setDateTime] = useState(new Date());
     const allIcons = {
       "01d":"https://openweathermap.org/img/wn/01d@2x.png",
@@ -32,11 +32,11 @@ const WeatherHeader = () => {
     const search = async (city)=>{
       try{
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_WEATHER_API}`
-        console.log(url)
+        // console.log(url)
         const response = await fetch(url)
         const data = await response.json()
         const currIcon = allIcons[data.weather[0].icon] || clear_icon
-        console.log(data)
+        // console.log(data)
         setWeatherData({
           humidity:data.main.humidity,
           windSpeed:data.wind.speed,
@@ -59,6 +59,8 @@ const WeatherHeader = () => {
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
    },[])
+
+
   const onChange = (e) => {
     setValue(e.target.value);
   }
@@ -75,7 +77,7 @@ const WeatherHeader = () => {
       <div className="flex items-center justify-between">
        <img src= {heart} alt="" />
         <img
-          src={logo} // Replace with your actual logo source
+          src={logo} 
           alt="Logo"
           className="h-8"
         />
@@ -87,7 +89,7 @@ const WeatherHeader = () => {
         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <input
           type="text"
-        //   value={value}
+          value={value}
             onChange={onChange}
           placeholder="what do you want today? (eg: burger, fries etc)"
           className="w-full pl-10 pr-3 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
