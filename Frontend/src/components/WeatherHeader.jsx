@@ -7,6 +7,7 @@ import weather from '../../Images/weather.png'
 import clear_icon from '../../Images/clear.png'
 
 
+
 const WeatherHeader = () => {
     const [value,setValue] = useState('');
     const [weatherData , setWeatherData] = useState("")
@@ -103,6 +104,19 @@ const WeatherHeader = () => {
           <p className="text-xs font-bold">{formattedDate}</p>
         </div>
         <p className="text-sm absolute bottom-2 right-5 font-bold">{formattedTime}</p>
+      </div>
+      <div className={`mt-4 border-2 border- p-2 flex gap-2 flex-col bg-[rgba(0,100,60,1)] rounded-lg items-center max-h-[130px] w-full relative leading-tight`}>
+        <div className="flex flex-col items-center">
+          <p className="text-xs text-white">Can't decide what to eat?</p>
+          <p className="text-sm font-bold text-white">Lets find your taste bud's </p>
+          <p className="text-sm text-white font-bold">PERFECT MATCH!</p>
+          <p className="text-white text-[7px]">Click here and start swiping to satisfy your taste buds...</p>
+
+        </div>
+        <button className="text-white bg-[rgba(239,214,85,1)] rounded-md px-2 py-2 text-sm">
+          START SWIPING
+        </button>
+
       </div>
     </div>
   );
