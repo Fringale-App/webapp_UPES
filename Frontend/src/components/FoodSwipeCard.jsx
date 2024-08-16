@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import burger from '../../Images/burger.png'
 
 const foodItems = [
   { name: "Cheese Burger",
      price: 120,
-     image: "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4=", 
+     image: burger, 
     description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun." },
     { name: "Pizza",
         price: 100,
@@ -40,7 +41,7 @@ const FoodSwipeCard = () => {
           <img 
             src={currentFood.image}
             alt={currentFood.name}
-            className="w-48 h-48 mx-auto -mb-12 rounded-lg"
+            className="w-60 h-30 mt-8 mx-auto -mb-12 rounded-lg"
           />
         </div>
 
