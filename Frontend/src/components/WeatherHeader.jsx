@@ -1,9 +1,6 @@
 import React,{useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
-import { FaSearch, FaHeart, FaUserCircle } from "react-icons/fa";
-import logo from '../../Images/logo.png';
-import heart from '../../Images/heart.svg';
-import profile from '../../Images/profile.svg';
+import { FaSearch} from "react-icons/fa";
 import weather from '../../Images/weather.png'
 import clear_icon from '../../Images/clear.png'
 
@@ -38,7 +35,7 @@ const WeatherHeader = () => {
         const response = await fetch(url)
         const data = await response.json()
         const currIcon = allIcons[data.weather[0].icon] || clear_icon
-        // console.log(data)
+        console.log(data)
         setWeatherData({
           humidity:data.main.humidity,
           windSpeed:data.wind.speed,
