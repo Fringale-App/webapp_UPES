@@ -29,7 +29,7 @@ const Swiper = () => {
     
       
       {/* Button */}
-      <NavLink to="/swipe-filter" className="inline-block">
+      <NavLink to="/food-filter" className="inline-block">
         <button className="bg-yellow-400 text-black font-bold py-2 px-6 rounded-md shadow-lg hover:bg-yellow-300 transition duration-300">
           START SWIPING
         </button>
