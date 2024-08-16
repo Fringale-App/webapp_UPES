@@ -9,7 +9,7 @@ const RestaurantList = () => {
         price: "90",
         image: "restaurant_image.jpg", // Replace with actual image path
     };
-  
+
     // Creating multiple cards for testing scrolling
     const restaurantArray = Array(10).fill(sampleRestaurant);
 
@@ -19,11 +19,12 @@ const RestaurantList = () => {
                 <h3 className="text-xl mb-2 font-semibold">Explore Restaurant</h3>
                 <p className="text-xs text-green-600">View All {">>"}</p>
             </div>
-            
 
-            {restaurantArray.map((restaurant, index) => (
-                <RestaurantCard key={index} restaurant={restaurant} />
-            ))}
+            <div className='sm:flex sm:justify-center sm:items-center sm:flex-wrap sm:gap-3'>
+                {restaurantArray.map((restaurant, index) => (
+                    <RestaurantCard key={index} restaurant={restaurant} />
+                ))}
+            </div>
         </div>
     );
 };

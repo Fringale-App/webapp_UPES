@@ -1,10 +1,12 @@
 import React,{useEffect, useState} from "react";
+import { NavLink } from "react-router-dom";
 import { FaSearch, FaHeart, FaUserCircle } from "react-icons/fa";
 import logo from '../../Images/logo.png';
 import heart from '../../Images/heart.svg';
 import profile from '../../Images/profile.svg';
 import weather from '../../Images/weather.png'
 import clear_icon from '../../Images/clear.png'
+
 
 
 const WeatherHeader = () => {
@@ -74,15 +76,7 @@ const WeatherHeader = () => {
   return (
     <div className="p-4 bg-white shadow-md">
       {/* Top bar */}
-      <div className="flex items-center justify-between">
-       <img src= {heart} alt="" />
-        <img
-          src={logo} 
-          alt="Logo"
-          className="h-8"
-        />
-        <img src={profile}/>
-      </div>
+    
 
       {/* Search bar */}
       <div className="mt-4 relative">
@@ -97,14 +91,19 @@ const WeatherHeader = () => {
       </div>
 
       {/* Weather and time section */}
-      <div className="mt-4 p-4 bg-blue-200 rounded-lg flex items-center min-h-[70px] justify-between bg-center w-full relative" style={{ backgroundImage: `url(${weatherData.icon})` }}>
-        <div className="absolute top-7">
+      <div className="mt-4 p-4 bg-blue-200 rounded-lg flex items-center min-h-[80px] justify-between bg-center w-full relative" style={{ backgroundImage: `url(${weatherData.icon})` }}>
+        <div className="absolute top-9">
           <p className=" text-sm font-bold">{weatherData.condition} {weatherData.temperature}°C</p>
           <p className="text-xs font-bold">{formattedDate}</p>
         </div>
-        <p className="text-sm absolute bottom-2 right-5 font-bold">{formattedTime}</p>
+        <p className="text-xs absolute bottom-2 right-5 font-bold">{formattedTime}</p>
       </div>
+     
+      
+
+      
     </div>
+   
   );
 };
 

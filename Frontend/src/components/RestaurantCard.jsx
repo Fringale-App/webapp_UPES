@@ -10,7 +10,7 @@ const RestaurantCard = ({ restaurant }) => {
         <img
           src={rest || restaurant.img}
           alt={restaurant.name}
-          className="w-full h-42 object-cover"
+          className="w-full h-[220px] object-cover object-center"
         />
         <div className="absolute top-[-20px] right-[-25px] bg-gray-800 text-white px-4 py-3 rounded-full">
          <p className="mt-4 text-xs mr-4"> Starting from ${restaurant.price}</p> 
