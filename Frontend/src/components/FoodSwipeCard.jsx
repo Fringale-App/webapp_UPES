@@ -4,10 +4,12 @@ import burger from '../../Images/burger.png'
 const foodItems = [
   { name: "Cheese Burger",
      price: 120,
+     isVeg:true,
      image: burger, 
     description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun." },
     { name: "Pizza",
         price: 100,
+        isVeg:false,
         image: "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4=", 
        description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame." },
   // Add other food items here...

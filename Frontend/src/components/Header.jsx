@@ -35,7 +35,7 @@ function Header() {
                 />
                 <img src={profile} />
             </div>
-            <div className="mt-4 mr-4 ml-4 relative">
+            <div className="mt-4 mb-4 mr-4 ml-4 relative">
                 <form onSubmit={handleSubmit}>
                     <button>
                         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

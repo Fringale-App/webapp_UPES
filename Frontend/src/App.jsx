@@ -8,6 +8,7 @@ import Header from './components/Header';
 import SwipeFilter from './pages/SwipeFilter';
 import Filter from './pages/Filter';
 import Search from './pages/Search';
+import RestaurantPage from './pages/RestaurantPage';
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/swipe-filter" element={<SwipeFilter/>}/>
         <Route path="/food-filter" element={<Filter/>}/>
         <Route path="/search" element={<Search/>}/>
+        <Route path="/restaurant" element={<RestaurantPage/>}/>
         
       </Routes>
     </BrowserRouter>

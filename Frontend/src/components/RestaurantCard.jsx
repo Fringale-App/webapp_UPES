@@ -1,9 +1,11 @@
 import React from "react";
 import heart from '../../Images/heart.svg';
 import rest from '../../Images/res3.jpg'
+import { NavLink } from "react-router-dom";
 
 const RestaurantCard = ({ restaurant }) => {
   return (
+  <NavLink to="/restaurant">
     <div className="bg-white shadow-md rounded-xl overflow-hidden mb-4">
       {/* Top Image Section */}
       <div className="relative">
@@ -85,6 +87,7 @@ const RestaurantCard = ({ restaurant }) => {
         </button>
       </div>
     </div>
+  </NavLink>
   );
 };
 
