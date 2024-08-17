@@ -1,7 +1,12 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { NavLink } from 'react-router-dom'
 
 function Filter() {
+    const [selectedLevel, setSelectedLevel] = useState(null);
+
+    const handleSelect = (level) => {
+        setSelectedLevel((prevLevel) => (prevLevel === level ? null : level));
+    };
     return (
         <div className='p-4 flex flex-col gap-2'>
             <div className='flex flex-col justify-center leading-tight'>
@@ -19,6 +24,10 @@ function Filter() {
                     </div>
                     <div className='border-2 p-1 rounded-md'>
                         <input type="checkbox" />NON VEG
+
+                    </div>
+                    <div className='border-2 p-1 rounded-md'>
+                        <input type="checkbox" />EGG
 
                     </div>
                 </div>
@@ -68,9 +77,31 @@ function Filter() {
                         </label>
                     </div>
                 </div>
-
+                
             </div>
-            <NavLink to="/swipe-filter" className="mx-auto bg-[rgba(0,100,60,1)] w-full text-white flex justify-center items-center p-1 rounded-md text-[20px] font-bold">
+                <div className='w-full h-[1px] bg-black'></div>
+            
+                <div>
+            <h1 className='font-bold text-[18px]'>Spice Level</h1>
+            <p className='text-[12px] font-black-300 leading-[20px]'>
+                How Much Spice you can handle
+            </p>
+            <div className='ml-4 flex gap-4'>
+                {["Normal", "Moderate", "High"].map((level) => (
+                    <div
+                        key={level}
+                        onClick={() => handleSelect(level)}
+                        className={`border-2 p-2 rounded-md cursor-pointer ${
+                            selectedLevel === level ? 'bg-green-200 border-green-500' : 'bg-white'
+                        }`}
+                    >
+                        {level}
+                    </div>
+                ))}
+            </div>
+        </div>
+
+     <NavLink to="/swipe-filter" className="mx-auto bg-[rgba(0,100,60,1)] w-full text-white flex justify-center items-center p-1 rounded-md text-[20px] font-bold">
                 <button>
                 START SWIPING{">>"}
                 </button>
