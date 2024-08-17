@@ -1,13 +1,13 @@
 import React,{useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
-import { FaSearch} from "react-icons/fa";
+
 import weather from '../../Images/weather.png'
 import clear_icon from '../../Images/clear.png'
 
 
 
 const WeatherHeader = () => {
-    const [value,setValue] = useState('');
+
     const [weatherData , setWeatherData] = useState("")
     const [dateTime, setDateTime] = useState(new Date());
     const allIcons = {
@@ -60,9 +60,7 @@ const WeatherHeader = () => {
    },[])
 
 
-  const onChange = (e) => {
-    setValue(e.target.value);
-  }
+ 
   const optionsDate = { weekday: 'short', day: '2-digit', month: 'short' };
   const formattedDate = dateTime.toLocaleDateString('en-GB', optionsDate);
 
@@ -71,24 +69,15 @@ const WeatherHeader = () => {
   const formattedTime = dateTime.toLocaleTimeString('en-GB', optionsTime);
 //   console.log(value);
   return (
-    <div className="p-4 bg-white shadow-md">
+    <div className="mr-4 ml-4 py-3 bg-white border-b-2">
       {/* Top bar */}
     
 
       {/* Search bar */}
-      <div className="mt-4 relative">
-        <FaSearch  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        <input
-          type="text"
-          value={value}
-            onChange={onChange}
-          placeholder="what do you want today? (eg: burger, fries etc)"
-          className="w-full pl-10 pr-3 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-      </div>
+
 
       {/* Weather and time section */}
-      <div className="mt-4 p-4 bg-blue-200 rounded-lg flex items-center min-h-[80px] justify-between bg-center w-full relative" style={{ backgroundImage: `url(${weatherData.icon})` }}>
+      <div className="mt-1 p-4 bg-blue-200 rounded-lg flex items-center min-h-[80px] justify-between bg-center w-full relative" style={{ backgroundImage: `url(${weatherData.icon})` }}>
         <div className="absolute top-9">
           <p className=" text-sm font-bold">{weatherData.condition} {weatherData.temperature}°C</p>
           <p className="text-xs font-bold">{formattedDate}</p>

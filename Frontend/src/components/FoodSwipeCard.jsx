@@ -35,7 +35,7 @@ const FoodSwipeCard = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="relative bg-[#00643C] rounded-b-[50%] p-4 text-center">
+        <div className="relative h-[230px] bg-[#00643C] rounded-b-[50%] p-4 text-center">
           <h2 className="text-white text-2xl font-bold">{currentFood.name}</h2>
           <p className="text-white text-sm">Starting from ${currentFood.price}</p>
           <img 
