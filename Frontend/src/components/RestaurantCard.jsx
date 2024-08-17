@@ -5,19 +5,21 @@ import { NavLink } from "react-router-dom";
 
 const RestaurantCard = ({ restaurant }) => {
   return (
-  <NavLink to="/restaurant">
+
     <div className="bg-white shadow-md rounded-xl overflow-hidden mb-4">
       {/* Top Image Section */}
-      <div className="relative">
-        <img
-          src={rest || restaurant.img}
-          alt={restaurant.name}
-          className="w-full h-[220px] object-cover object-center"
-        />
-        <div className="absolute top-[-20px] right-[-25px] bg-gray-800 text-white px-4 py-3 rounded-full">
-         <p className="mt-4 text-xs mr-4"> Starting from ${restaurant.price}</p> 
+      <NavLink to="/restaurant">
+        <div className="relative">
+          <img
+            src={rest || restaurant.img}
+            alt={restaurant.name}
+            className="w-full h-[220px] object-cover object-center"
+          />
+          <div className="absolute top-[-20px] right-[-25px] bg-gray-800 text-white px-4 py-3 rounded-full">
+            <p className="mt-4 text-xs mr-4"> Starting from ${restaurant.price}</p>
+          </div>
         </div>
-      </div>
+      </NavLink>
 
       {/* Restaurant Info Section */}
       <div className="p-2 border-b-2">
@@ -27,7 +29,7 @@ const RestaurantCard = ({ restaurant }) => {
             <p className="text-sm text-gray-600">{restaurant.cuisine}</p>
           </div>
           <div className="flex items-center">
-           
+
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -87,7 +89,7 @@ const RestaurantCard = ({ restaurant }) => {
         </button>
       </div>
     </div>
-  </NavLink>
+
   );
 };
 
