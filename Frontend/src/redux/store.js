@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userReducer from './user/userSlice';
-import foodReducer from './foodSlice';  // Import the foodSlice
+import foodReducer from './food/foodSlice';  // Import the foodSlice
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 

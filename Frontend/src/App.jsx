@@ -8,22 +8,30 @@ import Header from './components/Header';
 import SwipeFilter from './pages/SwipeFilter';
 import Filter from './pages/Filter';
 import Search from './pages/Search';
+import { Provider } from 'react-redux';
+import { store ,persistor } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+
 import RestaurantPage from './pages/RestaurantPage';
 function App() {
   return (
+  <Provider store={store}>
     <BrowserRouter>
-      <Header/>
+      <PersistGate loading={null} persistor={persistor}>
+        <Header/>
 
-      <Routes>
-        
-        <Route path="/" element={<Home/>}/>
-        <Route path="/swipe-filter" element={<SwipeFilter/>}/>
-        <Route path="/food-filter" element={<Filter/>}/>
-        <Route path="/search" element={<Search/>}/>
-        <Route path="/restaurant" element={<RestaurantPage/>}/>
-        
-      </Routes>
+        <Routes>
+          
+          <Route path="/" element={<Home/>}/>
+          <Route path="/swipe-filter" element={<SwipeFilter/>}/>
+          <Route path="/food-filter" element={<Filter/>}/>
+          <Route path="/search" element={<Search/>}/>
+          <Route path="/restaurant" element={<RestaurantPage/>}/>
+          
+        </Routes>
+      </PersistGate>
     </BrowserRouter>
+  </Provider>
   );
 }
 
