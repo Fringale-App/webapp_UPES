@@ -5,6 +5,7 @@ import profile from '../../Images/profile.svg';
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { useState,useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 
 function Header() {
@@ -32,15 +33,22 @@ function Header() {
     return (
         <div>
             <div className="flex min-h-[50px] items-center shadow-md justify-between">
-                <img src={heart} onClick={goToBucket} alt="" />
-                <img
-                    src={logo}
-                    alt="Logo"
-                    className="h-8"
-                />
-                <img src={profile} />
+                <img className="cursor-pointer" src={heart} onClick={goToBucket} alt="" />
+                <NavLink to="/">
+                    <img
+                        src={logo}
+                        alt="Logo"
+                        className="h-8"
+                    />
+                </NavLink>
+                <NavLink to="/signin">
+                    <img className="cursor-pointer" src={profile} />
+
+                </NavLink>
+              
+                
             </div>
-            <div className="mt-4 mb-4 mr-4 ml-4 relative">
+            <div className="mt-4 mr-4 ml-4 relative">
                 <form onSubmit={handleSubmit}>
                     <button>
                         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

@@ -179,10 +179,10 @@ function RestaurantPage() {
 
             </div>
           </div>
-          <p className='ml-4 font-bold mt-2'>Menu</p>
+          <p className='ml-4 sm:text-center font-bold mt-2'>Menu</p>
           <div className='px-4 flex relative flex-col gap-3 pt-2'>
             {foodItems.map((food) => (
-              <div className='flex gap-2 max-h-[120px] py-2 px-2 shadow-lg rounded-md'>
+              <div className='flex mx-auto gap-2 max-h-[120px] py-2 px-2 shadow-lg rounded-md'>
                 <div className='w-[100px]  h-[100px]'>
                   <img src={food.image} alt="" className='w-full h-full object-cover' />
                 </div>

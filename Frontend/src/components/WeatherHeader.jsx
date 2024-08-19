@@ -77,7 +77,7 @@ const WeatherHeader = () => {
 
 
       {/* Weather and time section */}
-      <div className="mt-1 p-4 bg-blue-200 rounded-lg flex items-center min-h-[80px] justify-between bg-center w-full relative" style={{ backgroundImage: `url(${weatherData.icon})` }}>
+      <div className="p-4 bg-blue-200 rounded-lg flex items-center min-h-[80px] justify-between bg-center w-full relative" style={{ backgroundImage: `url(${weatherData.icon})` }}>
         <div className="absolute top-9">
           <p className=" text-sm font-bold">{weatherData.condition} {weatherData.temperature}°C</p>
           <p className="text-xs font-bold">{formattedDate}</p>

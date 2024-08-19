@@ -14,6 +14,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import RestaurantPage from './pages/RestaurantPage';
 import Bucket from './pages/Bucket';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 function App() {
   return (
   <Provider store={store}>
@@ -29,6 +31,9 @@ function App() {
           <Route path="/search" element={<Search/>}/>
           <Route path="/restaurant" element={<RestaurantPage/>}/>
           <Route path="/bucket" element={<Bucket/>} />
+          <Route path="/signin" element={<SignIn/>} />
+          <Route path="/signup" element={<SignUp/>} />
+
           
         </Routes>
       </PersistGate>
