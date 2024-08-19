@@ -10,7 +10,9 @@ const Bucket = () => {
   const bucket = useSelector((state) => state.food.bucket);
 
   const handleRemove = (item) => {
-    dispatch(removeFromBucket(item));
+    if (item && item.name) { // Ensure item and item.name are defined
+      dispatch(removeFromBucket(item));
+    }
   };
 
   return (
@@ -18,14 +20,22 @@ const Bucket = () => {
       <h1 className="text-2xl font-bold mb-4">Your Bucket</h1>
       {currentUser ? (
         <div>
-          {bucket.length > 0 ? (
-            bucket.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-sm">
+          {bucket && bucket.length > 0 ? (
+            bucket.map((item, index) => (
+              item ? ( // *** Ensure item is not null or undefined ***
+              <div
+                key={index}
+                className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-sm"
+              >
                 <div className="flex items-center">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 rounded-md mr-4" />
+                  <img
+                    src={item?.image || "https://via.placeholder.com/150"} // Fallback image if item.image is null or undefined
+                    alt={item?.name || "Unknown Item"} // Fallback alt text if item.name is null or undefined
+                    className="w-16 h-16 rounded-md mr-4"
+                  />
                   <div>
-                    <h3 className="text-lg font-semibold">{item.name}</h3>
-                    <p className="text-gray-600">{item.description}</p>
+                    <h3 className="text-lg font-semibold">{item?.name || "Unnamed Item"}</h3>
+                    <p className="text-gray-600">{item?.description || "No description available."}</p>
                   </div>
                 </div>
                 <button
@@ -35,6 +45,7 @@ const Bucket = () => {
                   Remove
                 </button>
               </div>
+              ) : null // *** Safely skip if item is null ***
             ))
           ) : (
             <p>Your bucket is empty.</p>
