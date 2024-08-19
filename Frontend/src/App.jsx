@@ -13,6 +13,7 @@ import { store ,persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import RestaurantPage from './pages/RestaurantPage';
+import Bucket from './pages/Bucket';
 function App() {
   return (
   <Provider store={store}>
@@ -27,6 +28,7 @@ function App() {
           <Route path="/food-filter" element={<Filter/>}/>
           <Route path="/search" element={<Search/>}/>
           <Route path="/restaurant" element={<RestaurantPage/>}/>
+          <Route path="/bucket" element={<Bucket/>} />
           
         </Routes>
       </PersistGate>

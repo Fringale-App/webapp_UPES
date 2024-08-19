@@ -6,6 +6,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { useState,useEffect } from 'react';
 
+
 function Header() {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -24,10 +25,14 @@ function Header() {
         }
       }, [location.search]);
 
+      const goToBucket = () => {
+        navigate('/bucket');
+    };
+
     return (
         <div>
             <div className="flex min-h-[50px] items-center shadow-md justify-between">
-                <img src={heart} alt="" />
+                <img src={heart} onClick={goToBucket} alt="" />
                 <img
                     src={logo}
                     alt="Logo"
