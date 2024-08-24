@@ -4,6 +4,7 @@ import Swiper from '../components/Swiper'
 import FoodSwipeCard from '../components/FoodSwipeCard';
 function SwipeFilter() {
   return (
+    
   //  <Swiper/>
   <FoodSwipeCard/>
   );

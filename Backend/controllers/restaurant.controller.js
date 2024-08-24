@@ -41,6 +41,23 @@ export const getRestaurant = async (req, res, next) => {
     }
  };  
 
+ export const insertManyRestaurants = async (req, res ,next) => {
+  try {
+    const restaurantData = req.body; // Expecting an array of restaurant objects in the request body
+
+    // Insert many restaurants into the database
+    const insertedRestaurants = await Restaurant.insertMany(restaurantData);
+
+    res.status(201).json({
+      success: true,
+      message: 'Restaurants inserted successfully'
+    });
+  } catch (error) {
+  next(error)
+  
+  }
+};
+
  export const getRestaurants = async (req, res, next) => {
     try {
       const limit = parseInt(req.query.limit) || 9;

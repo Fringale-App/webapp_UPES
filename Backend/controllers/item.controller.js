@@ -85,6 +85,23 @@ export const updateItem = async (req, res ,next) => {
   }
 };
 
+export const insertManyItems = async (req, res ,next) => {
+  try {
+    const itemsData = req.body; // Expecting an array of restaurant objects in the request body
+
+    // Insert many restaurants into the database
+    const insertedItems = await Item.insertMany(itemsData);
+
+    res.status(201).json({
+      success: true,
+      message: 'items inserted successfully'
+    });
+  } catch (error) {
+  next(error)
+  
+  }
+};
+
 // Delete a food item by ID
 export const deleteItem = async (req, res ,next) => {
   try {
