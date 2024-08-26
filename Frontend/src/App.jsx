@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { store ,persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
+
 import RestaurantPage from './pages/RestaurantPage';
 import Bucket from './pages/Bucket';
 import SignIn from './pages/SignIn';
