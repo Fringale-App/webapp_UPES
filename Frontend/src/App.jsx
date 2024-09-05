@@ -17,6 +17,7 @@ import RestaurantPage from './pages/RestaurantPage';
 import Bucket from './pages/Bucket';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import PopUp from './components/PopUp';
 function App() {
   return (
   <Provider store={store}>
@@ -34,6 +35,7 @@ function App() {
           <Route path="/bucket" element={<Bucket/>} />
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/signup" element={<SignUp/>} />
+          <Route path="/popup" element={<PopUp/>} />
 
           
         </Routes>
