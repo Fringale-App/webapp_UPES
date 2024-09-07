@@ -119,7 +119,7 @@ const SwipeFilter = () => {
       });
     };
    
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < foodItems.length; i++) {
         if(cardCount<foodItems.length){
           appendNewCard();
         } 
