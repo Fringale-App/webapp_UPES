@@ -1,10 +1,12 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { likeFood, dislikeFood } from '../redux/food/foodSlice'; // Adjust the import path as needed
 import burger from '../../Images/burger.png';
 import Card from '../components/FoodSwipeCard'
 import '../css/style.css'
+import PopUp from "../components/PopUp";
+import { useNavigate } from "react-router";
 
 
 // const foodItems = [
@@ -25,6 +27,19 @@ import '../css/style.css'
 
 const SwipeFilter = () => {
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const closePopup = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      navigate('/bucket'); // Navigate to another page after animation ends
+    }, 50); // Delay navigation to allow animation to finish
+  };
+
+
+
 
   // // Access the current index and bucket from Redux state
   // const currentIndex = useSelector((state) => state.food.currentIndex);
@@ -72,6 +87,10 @@ const SwipeFilter = () => {
     // ];
 
     let cardCount = 0;
+    if (isOpen) {
+      const timer = setTimeout(closePopup, 4000); // Close popup after 4 seconds
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount or when state changes
+    }
 
     const appendNewCard = () => {
       const currentFood = foodItems[cardCount % foodItems.length]
@@ -79,6 +98,7 @@ const SwipeFilter = () => {
         imageUrl: foodItems[cardCount % foodItems.length].image,
         onDismiss: appendNewCard,
         onLike: () => {
+          setIsOpen(true)
           dispatch(likeFood(currentFood));
           like.style.animationPlayState = "running";
           like.classList.toggle("trigger");
@@ -99,17 +119,17 @@ const SwipeFilter = () => {
       });
     };
    
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < foodItems.length; i++) {
         if(cardCount<foodItems.length){
           appendNewCard();
         } 
       }
     
    
-  }, []);
+  }, [isOpen]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center relative">
       {/* <ion-icon id="dislike" name="heart-dislike" className="text-8xl bg-black bg-opacity-50 rounded-full p-5 text-gray-500"></ion-icon> */}
       <div id="swiper" className="relative w-75 h-[75vh] perspective">
         {/* Cards will be appended here dynamically */}
@@ -135,6 +155,7 @@ const SwipeFilter = () => {
           />
         </button>
       </div>
+      <PopUp isOpen={isOpen} onClose={closePopup}/>
     </div>
   );
 }
