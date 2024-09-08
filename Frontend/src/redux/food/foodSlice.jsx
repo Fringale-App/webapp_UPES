@@ -10,10 +10,9 @@ const foodSlice = createSlice({
   initialState,
   reducers: {
     likeFood: (state, action) => {
-      // Ensure the action payload is valid before adding to the bucket
       if (action.payload && action.payload.name) {
         state.bucket.push(action.payload);
-        state.currentIndex += 1; // Increment the index
+        state.currentIndex += 1;
       }
     },
     dislikeFood: (state) => {
@@ -24,7 +23,6 @@ const foodSlice = createSlice({
       state.bucket = [];
     },
     removeFromBucket: (state, action) => {
-      // *** Use name property for comparison instead of id ***
       if (action.payload && action.payload.name) {
         state.bucket = state.bucket.filter(item => item && item.name !== action.payload.name);
       }
