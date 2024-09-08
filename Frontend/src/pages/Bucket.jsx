@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeFromBucket } from '../redux/food/foodSlice';
+import { removeFromBucket } from '../redux/food/foodSlice.jsx';
 import { FaRupeeSign } from "react-icons/fa";
 
 const Bucket = () => {
   const dispatch = useDispatch();
 
   // Access the current user and the user's bucket from the Redux store
-  const currentUser = useSelector((state) => state.user.currentUser);
-  const bucket = useSelector((state) => state.food.bucket);
+  const { currentUser } = useSelector((state) => state.user);
+  const  bucket = useSelector((state) => state.food);
 
   const handleRemove = (item) => {
     if (item && item.name) { // Ensure item and item.name are defined
@@ -19,7 +19,7 @@ const Bucket = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Your Bucket</h1>
-      {currentUser ? (
+      {currentUser!=null && Object.keys(currentUser).length > 0 ? (
         <div className='flex flex-col gap-2'>
           {bucket && bucket.length > 0 ? (
             bucket.map((item, index) => (
@@ -73,9 +73,8 @@ const Bucket = () => {
                 </div>
               ) : null // *** Safely skip if item is null ***
             ))
-          ) : (
-            <p>Your bucket is empty.</p>
-          )}
+          ) : <p>Your bucket is empty. {currentUser? `yes it is ${currentUser}`:""}</p>
+}
         </div>
       ) : (
         <p>Please sign in to view your bucket.</p>

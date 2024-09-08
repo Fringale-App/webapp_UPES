@@ -3,9 +3,12 @@ import bowl from "../../Images/bro.jpg"
 import logo from '../../Images/logo.png'
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function SignUp() {
+    const navigate = useNavigate();
+    const [loading,setLoading] = useState(false)
     const [formData, setFormData] = useState({
         name:"",
         email: '',
@@ -20,13 +23,36 @@ function SignUp() {
         }));
     };
     
-    const handleSubmit = (e) => {
+    async function handleSubmit(e) {
+        const {name,email,password} = formData
         e.preventDefault();
-        // Handle form submission
-        console.log('Email:', formData.email);
-        console.log('Password:', formData.password);
-        // You can add further actions like API calls here
-    };
+        if(!name || !email || !password){
+            return;
+        }
+       
+        try {
+            setLoading(true)
+            const result = await fetch('/api/user/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            if(result) console.log("succes")
+            else console.log("failde")
+            setLoading(false)
+            setFormData({})
+            setTimeout(()=>{
+                navigate('/signin')
+            },2000)
+            
+        } catch (err) {
+            setLoading(false)
+            console.log('Error:', err);
+           
+        }
+    }
     return (
         <div>
             <div className="w-full mt-2 h-[180px]">
@@ -86,10 +112,10 @@ function SignUp() {
                         />
                     </div>
                     <button
-                        type="submit"
+                        type="submit" disabled={loading}
                         className="w-full bg-[#00643c] text-white font-semibold py-2 px-4 rounded-md hover:bg-green-950 transition duration-200"
                     >
-                        Sign Up
+                        {loading? "Loading..":"Sign Up"}
                     </button>
                 </form>
             </div>

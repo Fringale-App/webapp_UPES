@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { likeFood, dislikeFood } from '../redux/food/foodSlice'; // Adjust the import path as needed
+import { likeFood, dislikeFood } from '../redux/food/foodSlice.jsx'; // Adjust the import path as needed
 import burger from '../../Images/burger.png';
 import Card from '../components/FoodSwipeCard'
 import '../css/style.css'

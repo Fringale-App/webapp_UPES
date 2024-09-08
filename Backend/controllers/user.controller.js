@@ -51,9 +51,11 @@ export const register = async (req, res, next) => {
      console.log(validUser);
      const {password:pass ,...rest} = validUser._doc
      if(!isPassword){
-         return next("Not a valid password")
+         return next()
      }
-        res.json({success:true,message:"Login Successful",data:rest})
+     const token = jwt.sign({id:validUser._id},process.env.SECRET)
+     res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
+        // res.json({success:true,message:"Login Successful",data:rest})
      
  }catch(err){
     next(err);
