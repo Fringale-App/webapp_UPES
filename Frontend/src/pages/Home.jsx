@@ -3,19 +3,25 @@ import WeatherHeader from '../components/WeatherHeader';
 import FoodOptions from '../components/FoodOptions';
 import RestaurantList from '../components/RestaurantList';
 import Swiper from '../components/Swiper';
+import {useSelector} from 'react-redux';
 
 const Home = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   // Function to get the user's location
   const getUserLocation = () => {
+    const userId = currentUser?.data?._id; // Access user ID from `currentUser.data`
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-
-          // Call function to send the location to backend
-          updateLocationOnBackend(latitude, longitude);
+  
+          if (userId) {
+            updateLocationOnBackend(userId, latitude, longitude);
+          } else {
+            console.error("User ID is not available");
+          }
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -25,24 +31,26 @@ const Home = () => {
       console.log("Geolocation is not supported by this browser.");
     }
   };
+  
 
   // Function to send location to backend
-  const updateLocationOnBackend = async (latitude, longitude) => {
+  const updateLocationOnBackend = async (userId, latitude, longitude) => {
     try {
+      console.log('Sending Data:', { userId, latitude, longitude });  
       const response = await fetch('http://localhost:3000/api/user/update-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId, // Pass the user's ID here (you may get this from localStorage or state)
+          userId,
           latitude,
           longitude,
         }),
       });
 
       const data = await response.json();  // Check the response format
-
+      console.log('Response Data:', data);
       if (data.success) {
         console.log("Location updated successfully");
       } else {
@@ -53,11 +61,11 @@ const Home = () => {
     }
   };
 
-
   // Call getUserLocation when the component mounts
   useEffect(() => {
+    console.log('Current User:', currentUser);
     getUserLocation();
-  }, []);
+  }, [currentUser]);  // Dependency array ensures it runs if currentUser changes
 
   return (
     <div className='overflow-y-scroll min-h-full'>

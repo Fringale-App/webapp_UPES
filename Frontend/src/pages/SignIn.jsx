@@ -1,14 +1,15 @@
-import React from 'react'
-import kitchen from "../../Images/kitchen.jpg"
-import logo from '../../Images/logo.png'
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import kitchen from "../../Images/kitchen.jpg";
+import logo from '../../Images/logo.png';
 
 function SignIn() {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [popupMessage, setPopupMessage] = useState(''); // Error message state
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,16 +19,48 @@ function SignIn() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission
-        console.log('Email:', formData.email);
-        console.log('Password:', formData.password);
-        // You can add further actions like API calls here
+        try {
+            dispatch(signInStart());
+            const res = await fetch('http://localhost:3000/api/user/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+            if (data.success === false) {
+                setPopupMessage(data.message);  // Set error message in popup
+                dispatch(signInFailure(data.message));
+                return;
+            }
+            dispatch(signInSuccess(data));
+            navigate('/');
+        } catch (error) {
+            setPopupMessage(error.message);  // Set error message if there's an issue
+            dispatch(signInFailure(error.message));
+        }
     };
 
     return (
         <div>
+            {/* Popup Message */}
+            {popupMessage && (
+                <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+                    <div className="bg-white px-6 py-4 rounded shadow-lg">
+                        <p className="text-red-500 font-semibold">{popupMessage}</p>
+                        <button
+                            onClick={() => setPopupMessage('')}
+                            className="mt-4 bg-[#00643c] text-white py-2 px-4 rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="w-full mt-2 h-[180px]">
                 <img className='w-full h-full' src={kitchen} alt="" />
             </div>
@@ -40,9 +73,6 @@ function SignIn() {
                 <form onSubmit={handleSubmit} className="bg-white px-4 py-2 rounded-lg w-[300px]">
                     <h6 className="text-base font-bold mb-2">Sign In</h6>
                     <div className="mb-4">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Gmail
-                        </label> */}
                         <input
                             type="email"
                             id="email"
@@ -55,9 +85,6 @@ function SignIn() {
                         />
                     </div>
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                            Password
-                        </label> */}
                         <input
                             type="password"
                             id="password"
@@ -78,12 +105,11 @@ function SignIn() {
                 </form>
             </div>
             <div className='flex justify-center gap-2 mt-1'>
-                    <p className="text-base font-thin">If you are a new user?</p>
-                    <NavLink className="text-[#00643c] underline hover:text-green-950" to="/signup">Sign Up</NavLink>
+                <p className="text-base font-thin">If you are a new user?</p>
+                <NavLink className="text-[#00643c] underline hover:text-green-950" to="/signup">Sign Up</NavLink>
             </div>
-
         </div>
-    )
+    );
 }
 
-export default SignIn
+export default SignIn;
