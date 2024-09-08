@@ -53,11 +53,40 @@ export const register = async (req, res, next) => {
      if(!isPassword){
          return next()
      }
-     const token = jwt.sign({id:validUser._id},process.env.SECRET)
-     res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
-        // res.json({success:true,message:"Login Successful",data:rest})
+     // Location update after successful login
+     const { latitude, longitude } = req.body;
+     if (latitude && longitude) {
+         validUser.location = { latitude, longitude };
+         await validUser.save();
+     }
+        res.json({success:true,message:"Login Successful",data:rest})
      
  }catch(err){
     next(err);
 }
   }
+
+  export const updateLocation = async (req, res, next) => {
+    try {
+      const { userId, latitude, longitude } = req.body;
+  
+      if (!latitude || !longitude) {
+        return res.status(400).json({ success: false, message: "Latitude and longitude are required." });
+      }
+  
+      // Find the user by their ID and update their location
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found." });
+      }
+  
+      user.location = { latitude, longitude };
+      await user.save();
+  
+      // Send success response
+      res.status(200).json({ success: true, message: "Location updated successfully." });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
