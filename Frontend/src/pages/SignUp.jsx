@@ -4,6 +4,7 @@ import logo from '../../Images/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signUpStart, signUpSuccess, signUpFailure } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 
 function SignUp() {
     const dispatch = useDispatch();
@@ -84,7 +85,7 @@ function SignUp() {
                 </div>
             </div>
             <div className="flex justify-center items-center">
-                <form onSubmit={handleSubmit} className="bg-white px-4 py-2 rounded-lg w-[300px]">
+                <form onSubmit={handleSubmit} className="bg-white flex flex-col gap-2 px-4 py-2 rounded-lg w-[300px]">
                     <h6 className="text-base font-bold mb-2">Sign Up</h6>
                     <div className="mb-4">
                         <input
@@ -129,6 +130,7 @@ function SignUp() {
                     >
                         {loading ? "Loading.." : "Sign Up"}
                     </button>
+                    <OAuth/>
                 </form>
             </div>
             <div className='flex justify-center gap-2 mt-1'>

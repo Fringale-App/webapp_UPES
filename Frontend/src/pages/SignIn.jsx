@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import kitchen from "../../Images/kitchen.jpg";
 import logo from '../../Images/logo.png';
+import OAuth from '../components/OAuth';
 
 function SignIn() {
     const dispatch = useDispatch();
@@ -70,7 +71,7 @@ function SignIn() {
                 </div>
             </div>
             <div className="flex justify-center items-center">
-                <form onSubmit={handleSubmit} className="bg-white px-4 py-2 rounded-lg w-[300px]">
+                <form onSubmit={handleSubmit} className="bg-white px-4 flex flex-col gap-2 py-2 rounded-lg w-[300px]">
                     <h6 className="text-base font-bold mb-2">Sign In</h6>
                     <div className="mb-4">
                         <input
@@ -102,6 +103,7 @@ function SignIn() {
                     >
                         Sign In
                     </button>
+                    <OAuth/>
                 </form>
             </div>
             <div className='flex justify-center gap-2 mt-1'>

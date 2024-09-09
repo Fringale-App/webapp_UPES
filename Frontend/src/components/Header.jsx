@@ -6,9 +6,11 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { useState,useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 function Header() {
+    const {currentUser} = useSelector((state)=>state.user)
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
     const handleSubmit = (e) => {
@@ -41,8 +43,8 @@ function Header() {
                         className="h-8"
                     />
                 </NavLink>
-                <NavLink to="/signin">
-                    <img className="cursor-pointer" src={profile} />
+                <NavLink to={currentUser? "/profile":"/signin"}>
+                    <img className="cursor-pointer w-10 h-10 rounded-full mr-1 object-cover" src={currentUser? (currentUser.avatar):(profile)} />
 
                 </NavLink>
               

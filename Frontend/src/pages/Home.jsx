@@ -4,7 +4,7 @@ import FoodOptions from '../components/FoodOptions';
 import RestaurantList from '../components/RestaurantList';
 import Swiper from '../components/Swiper';
 import {useSelector,useDispatch} from 'react-redux';
-import { signOutUserSuccess } from '../redux/user/userSlice';
+import { signOutUserFailure, signOutUserStart, signOutUserSuccess } from '../redux/user/userSlice';
 
 const Home = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -12,7 +12,7 @@ const Home = () => {
 
   // Function to get the user's location
   const getUserLocation = () => {
-    const userId = currentUser?.data?._id; // Access user ID from `currentUser.data`
+    const userId = currentUser?._id; // Access user ID from `currentUser.data`
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -69,17 +69,28 @@ const Home = () => {
     getUserLocation();
    }
   }, [currentUser]);  // Dependency array ensures it runs if currentUser changes
-  // function deleteUser (){
-  //   dispatch(signOutUserSuccess());
-   
-  // }
+  async function handleSignOut(){
+    try{
+      dispatch(signOutUserStart())
+      const result = await fetch('/api/user/signout');
+      const data = await result.json();
+      if(data.success===false){
+        dispatch(signOutUserFailure(data.message))
+        return
+      }
+      dispatch(signOutUserSuccess())
+  
+    }catch(err){
+      dispatch(signOutUserFailure(err.message))
+    }
+  }
 
   return (
     <div className='overflow-y-scroll min-h-full'>
       <WeatherHeader />
-      {/* <div>
-        <button onClick={deleteUser} className='p-2 bg-black text-white '>Delete User</button>
-      </div> */}
+      <div>
+        <button onClick={handleSignOut} className='p-2 bg-black text-white '>Delete User</button>
+      </div>
       <Swiper />
       <FoodOptions />
       <RestaurantList />
