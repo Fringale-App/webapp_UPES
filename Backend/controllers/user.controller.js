@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
+import jwt from 'jsonwebtoken'
 
 export const signup = async (req, res, next) => {
   try {
@@ -70,13 +71,41 @@ export const signup = async (req, res, next) => {
       }
   
       // console.log("SignIn successful for user:", validUser.email);
-      res.json({ success: true, message: "Login successful", data: rest });
+      const token = jwt.sign({id:validUser._id},process.env.SECRET)
+      res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
+    }
       
-    } catch (err) {
+     catch (err) {
       console.error("Error in signin:", err);  // Log detailed error
       next(err);
     }
   };
+
+  export const google = async (req,res,next) =>{
+    try{
+        const user = await User.findOne({email:req.body.email})
+        if(user){
+            const token = jwt.sign({id:user._id},process.env.SECRET)
+            const {password:pass ,...rest} = user._doc
+            res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
+        
+        }else{
+            const {name,email,avatar} = req.body;
+            const generatedPassword = Math.random().toString(36).slice(-8)+ Math.random().toString(36).slice(-8)
+            const hashedPassword = bcrypt.hashSync(generatedPassword,10)
+            const newUser = new User({name,email,password:hashedPassword ,avatar:avatar})
+        
+            await newUser.save()
+            const token = jwt.sign({id:newUser._id},process.env.SECRET)
+            const {password:pass,...rest} = newUser._doc
+            res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
+        
+        }      
+    }catch(err){
+        next(err)
+    }
+    
+}
   
 
   export const updateLocation = async (req, res, next) => {
@@ -105,6 +134,15 @@ export const signup = async (req, res, next) => {
       next(error);
     }
   };
+
+  export const signOut = (req,res,next)=>{
+    try{
+        res.clearCookie('access_token')
+        res.status(200).json("User Sign Out Successfully")
+    }catch(err){
+        next(err)
+    }
+}
   
   
   
