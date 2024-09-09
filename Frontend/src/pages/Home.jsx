@@ -3,10 +3,12 @@ import WeatherHeader from '../components/WeatherHeader';
 import FoodOptions from '../components/FoodOptions';
 import RestaurantList from '../components/RestaurantList';
 import Swiper from '../components/Swiper';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
+import { signOutUserSuccess } from '../redux/user/userSlice';
 
 const Home = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const dispatch = useDispatch();
 
   // Function to get the user's location
   const getUserLocation = () => {
@@ -63,13 +65,21 @@ const Home = () => {
 
   // Call getUserLocation when the component mounts
   useEffect(() => {
-    console.log('Current User:', currentUser);
+   if(currentUser){
     getUserLocation();
+   }
   }, [currentUser]);  // Dependency array ensures it runs if currentUser changes
+  // function deleteUser (){
+  //   dispatch(signOutUserSuccess());
+   
+  // }
 
   return (
     <div className='overflow-y-scroll min-h-full'>
       <WeatherHeader />
+      {/* <div>
+        <button onClick={deleteUser} className='p-2 bg-black text-white '>Delete User</button>
+      </div> */}
       <Swiper />
       <FoodOptions />
       <RestaurantList />
