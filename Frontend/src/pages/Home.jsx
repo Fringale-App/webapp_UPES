@@ -69,28 +69,12 @@ const Home = () => {
     getUserLocation();
    }
   }, [currentUser]);  // Dependency array ensures it runs if currentUser changes
-  async function handleSignOut(){
-    try{
-      dispatch(signOutUserStart())
-      const result = await fetch('/api/user/signout');
-      const data = await result.json();
-      if(data.success===false){
-        dispatch(signOutUserFailure(data.message))
-        return
-      }
-      dispatch(signOutUserSuccess())
-  
-    }catch(err){
-      dispatch(signOutUserFailure(err.message))
-    }
-  }
+ 
 
   return (
     <div className='overflow-y-scroll min-h-full'>
       <WeatherHeader />
-      <div>
-        <button onClick={handleSignOut} className='p-2 bg-black text-white '>Delete User</button>
-      </div>
+      
       <Swiper />
       <FoodOptions />
       <RestaurantList />
