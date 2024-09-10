@@ -44,7 +44,7 @@ function Header() {
                     />
                 </NavLink>
                 <NavLink to={currentUser? "/profile":"/signin"}>
-                    <img className="cursor-pointer w-10 h-10 rounded-full mr-1 object-cover" src={currentUser? (currentUser.avatar):(profile)} />
+                    <img className="cursor-pointer w-10 h-10 rounded-full mr-2 object-cover" src={currentUser? (currentUser.avatar):(profile)} />
 
                 </NavLink>
               
