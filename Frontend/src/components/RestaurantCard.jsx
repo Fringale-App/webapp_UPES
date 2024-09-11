@@ -8,7 +8,7 @@ const RestaurantCard = ({ restaurant }) => {
 
     <div className="bg-white shadow-md rounded-xl overflow-hidden mb-4">
       {/* Top Image Section */}
-      <NavLink to="/restaurant">
+      <NavLink to={`/restaurant/${restaurant._id}`}>
         <div className="relative">
           <img
             src={rest || restaurant.img}

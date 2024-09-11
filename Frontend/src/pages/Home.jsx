@@ -12,6 +12,7 @@ const Home = () => {
 
   // Function to get the user's location
   const getUserLocation = () => {
+    console.log("current",currentUser?._id)
     const userId = currentUser?._id; // Access user ID from `currentUser.data`
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -39,7 +40,7 @@ const Home = () => {
   const updateLocationOnBackend = async (userId, latitude, longitude) => {
     try {
       console.log('Sending Data:', { userId, latitude, longitude });  
-      const response = await fetch('http://localhost:3000/api/user/update-location', {
+      const response = await fetch('/api/user/update-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

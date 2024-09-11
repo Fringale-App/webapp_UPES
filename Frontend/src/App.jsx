@@ -34,7 +34,7 @@ function App() {
           <Route path="/swipe-filter" element={<SwipeFilter/>}/>
           <Route path="/food-filter" element={<Filter/>}/>
           <Route path="/search" element={<Search/>}/>
-          <Route path="/restaurant" element={<RestaurantPage/>}/>
+          <Route path="/restaurant/:id" element={<RestaurantPage/>}/>
           <Route path="/bucket" element={<Bucket/>} />
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/signup" element={<SignUp/>} />
