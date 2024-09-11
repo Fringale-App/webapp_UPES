@@ -154,17 +154,19 @@ export const signup = async (req, res, next) => {
       console.log('Request Body:', req.body);  // Log request body for debugging
   
       if (!latitude || !longitude || !userId) {
+        console.log("No lattitudes",latitude,longitude,userId)
         return res.status(400).json({ success: false, message: "Latitude, longitude and Id are required." });
       }
   
       const user = await User.findById(userId);
       if (!user) {
+        console.log("user not found ", userId)
         return res.status(404).json({ success: false, message: "User not found." });
       }
   
       user.location = { latitude, longitude };
       const updatedUser = await user.save();
-  
+      console.log("updated user",updatedUser)
       // console.log('Updated User:', updatedUser);  // Log updated user for debugging
   
       res.status(200).json({ success: true, message: "Location updated successfully." });

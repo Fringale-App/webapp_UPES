@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.route.js';
 import restaurantRouter from './routes/restaurant.route.js'
 import itemRouter from './routes/item.route.js'
+import fileRouter from './routes/fileUpload.route.js'
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ mongoose.connect(process.env.MONGO_URL)
 app.use('/api/user', userRouter);
 app.use('/api/restaurant', restaurantRouter);
 app.use('/api/item', itemRouter);
+app.use('/api/file',fileRouter)
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

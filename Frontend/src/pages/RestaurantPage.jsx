@@ -6,54 +6,55 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { FaSearch } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
-
+import { useParams } from 'react-router-dom';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { useState, useEffect } from 'react';
 import { MdOutlineLocationOn } from "react-icons/md";
 import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 import { NavLink } from 'react-router-dom';
-const foodItems = [
-  {
-    name: "Cheese Burger",
-    price: 120,
-    isVeg: true,
-    image: wada,
-    description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun."
-  },
-  {
-    name: "Pizza",
-    price: 100,
-    isVeg: false,
-    image: "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4=",
-    description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame."
-  },
-  // Add other food items here...
-];
-const shops = [
-  {
-    name: "Restaurant Name",
+// const foodItems = [
+//   {
+//     name: "Cheese Burger",
+//     price: 120,
+//     isVeg: true,
+//     image: wada,
+//     description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun."
+//   },
+//   {
+//     name: "Pizza",
+//     price: 100,
+//     isVeg: false,
+//     image: "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4=",
+//     description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame."
+//   },
+//   // Add other food items here...
+// ];
+// const shops = [
+//   {
+//     name: "Restaurant Name",
 
-    imageUrls: [res, "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4="],
-    time: "8 AM - 6 PM",
-    priceRange: "40-200",
-    description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun.",
-    address: "Address 1 (First Floor)"
-  },
-  {
-    name: "Pizza",
+//     imageUrls: [res, "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4="],
+//     time: "8 AM - 6 PM",
+//     priceRange: "40-200",
+//     description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun.",
+//     address: "Address 1 (First Floor)"
+//   },
+//   {
+//     name: "Pizza",
 
-    imageUrls: ["https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4="],
-    time: "8 AM - 6 PM",
-    priceRange: "40-200",
-    description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame.",
-    address: "Address 2"
-  },
-  // Add other food items here...
-];
+//     imageUrls: ["https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4="],
+//     time: "8 AM - 6 PM",
+//     priceRange: "40-200",
+//     description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame.",
+//     address: "Address 2"
+//   },
+//   // Add other food items here...
+// ];
 
 
 function RestaurantPage() {
@@ -62,21 +63,34 @@ function RestaurantPage() {
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const params = useParams()
+  const [resFoods, setResFoods] = useState([]);
+const { currentUser } = useSelector((state) => state.user);
 
 
 
   useEffect(() => {
-    const fetchRestaurant = () => {
+    const fetchRestaurant = async () => {
       try {
         setLoading(true);
-        // const res = await fetch(`/api/restaurant/get/${params.restaurantId}`);
-        // const data = await res.json();
-        // if (data.success === false) {
-        //   setError(true);
-        //   setLoading(false);
-        //   return;
-        // }
-        setRestaurant(shops[0]);
+        const res = await fetch(`/api/restaurant/get/${params.id}`);
+        const data = await res.json();
+        if (data.success === false) {
+          setError(true);
+          setLoading(false);
+          return;
+        }
+        setRestaurant(data);
+        const response = await fetch(`/api/restaurant/foods/${params.id}`);
+        const info = await response.json();
+        if (info.success === false) {
+          setError(true);
+          setLoading(false);
+          return;
+        }
+        setResFoods(info);
+        // console.log("the info ",info)
+        // console.log("the data ",resFoods[0].imageUrls)
         setLoading(false);
         setError(false);
       } catch (error) {
@@ -129,13 +143,13 @@ function RestaurantPage() {
                   <p>Price Range</p>
                   <div className='flex items-center justify-center'>
                     <p><FaRupeeSign /></p>
-                    <p className='font-semibold'>{restaurant.priceRange} </p>
+                    <p className='font-semibold'>{restaurant.priceRange || "40-200"} </p>
                   </div>
 
                 </div>
                 <div className='flex flex-col items-center justify-center'>
                   <p>Opening hours</p>
-                  <p className='font-semibold'>{restaurant.time}</p>
+                  <p className='font-semibold'>{restaurant.time || '8 AM - 6 PM'}</p>
 
                 </div>
               </div>
@@ -181,10 +195,10 @@ function RestaurantPage() {
           </div>
           <p className='ml-4 sm:text-center font-bold mt-2'>Menu</p>
           <div className='px-4 flex relative flex-col gap-3 pt-2'>
-            {foodItems.map((food) => (
-              <div className='flex mx-auto gap-2 max-h-[120px] py-2 px-2 shadow-lg rounded-md'>
-                <div className='w-[100px]  h-[100px]'>
-                  <img src={food.image} alt="" className='w-full h-full object-cover' />
+            {resFoods.map((food,index) => (
+              <div key={index} className='flex mx-auto gap-2 max-h-[140px] py-2 px-2 shadow-lg rounded-md'>
+                <div className='max-w-[30vw]  h-[100px]'>
+                  <img src={Array.isArray(food.imageUrls) ? food.imageUrls[0] : food.imageUrls} alt={food.name} className='w-full h-full object-cover' />
                 </div>
                 <div>
                   <div className='flex justify-between'>
@@ -220,7 +234,7 @@ function RestaurantPage() {
                   <div className='flex justify-between'>
                     <div>
                       <p className='text-[14px] font-medium'>{food.name}</p>
-                      <p className='text-[10px] font-normal'>{food.description.length>20 ? food.description.slice(0,20)+"...": food.description }</p>
+                      <p className='text-[10px] font-normal'>{food.description.length>20 ? food.description.slice(0,20)+"...": food.description || "Healthy food.." }</p>
                     </div>
                     <div className='w-[61px] bg-slate-200 mt-2 flex justify-center items-center h-[16px] rounded-sm'>
                       <p className='text-[10px] font-normal'>48 ratings</p>
@@ -229,7 +243,7 @@ function RestaurantPage() {
                   <div className='flex justify-between'>
                     <div className='flex justify-center items-center text-[14px] font-semibold text-[#212121]'>
                       <FaRupeeSign/>
-                      {food.price}
+                      {food.regularPrice}
                     </div>
                     <FaRegHeart className='text-[#212121]'/>
 

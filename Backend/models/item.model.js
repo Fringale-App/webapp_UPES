@@ -1,13 +1,13 @@
 import mongoose from 'mongoose'
 
 const itemSchema = new mongoose.Schema({
-  imageUrls: { type: [String], required: true },
+  imageUrls: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
   isVeg: { type: Boolean, required: true },
   category:{ type: String, required: true },
-  regularPrice: { type: Number, required: true },
-  discountPrice: { type: Number, required: true },
+  regularPrice: { type: Number, required: true},
+  discountPrice: { type: Number, required: true,default:0 },
   offer: { type: Boolean, required: true },
   resRef: {
     type: String,

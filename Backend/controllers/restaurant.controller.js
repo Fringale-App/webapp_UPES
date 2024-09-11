@@ -1,3 +1,4 @@
+import Item from "../models/item.model.js"
 import Restaurant from "../models/restaurant.model.js"
 
 export const registerRes = async (req,res,next)=>{
@@ -57,6 +58,16 @@ export const getRestaurant = async (req, res, next) => {
   
   }
 };
+
+export const getResFoods = async (req, res, next) => {
+  try {
+    const foods = await Item.find({ resRef: req.params.id });
+    if(!foods) return next()
+    res.status(200).json(foods);
+  } catch (error) {
+    next(error);
+  }
+}
 
  export const getRestaurants = async (req, res, next) => {
     try {
