@@ -12,7 +12,9 @@ const Home = () => {
 
   // Function to get the user's location
   const getUserLocation = () => {
-    const userId = currentUser?._id; // Access user ID from `currentUser.data`
+    const userId = currentUser?._id; 
+    // console.log('Current User:', userId);
+    // Access user ID from `currentUser.data`
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
