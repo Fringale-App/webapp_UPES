@@ -194,11 +194,12 @@ const { currentUser } = useSelector((state) => state.user);
             </div>
           </div>
           <p className='ml-4 sm:text-center font-bold mt-2'>Menu</p>
-          <div className='px-4 flex relative flex-col gap-3 pt-2'>
+          <div className='px-2 flex relative flex-col gap-3 pt-2'>
             {resFoods.map((food,index) => (
               <div key={index} className='flex mx-auto gap-2 max-h-[140px] py-2 px-2 shadow-lg rounded-md'>
-                <div className='max-w-[30vw]  h-[100px]'>
-                  <img src={Array.isArray(food.imageUrls) ? food.imageUrls[0] : food.imageUrls} alt={food.name} className='w-full h-full object-cover' />
+                <div className='max-w-[30vw] min-w-[30vw] h-[100px]'>
+                {/* <iframe className='w-full h-full object-cover' src={Array.isArray(food.imageUrls) ? food.imageUrls[0] : food.imageUrls}></iframe> */}
+                  <img src={food.imageUrls} alt={food.name} className='w-full h-full object-cover' />
                 </div>
                 <div>
                   <div className='flex justify-between'>
