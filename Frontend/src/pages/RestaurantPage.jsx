@@ -196,12 +196,12 @@ const { currentUser } = useSelector((state) => state.user);
           <p className='ml-4 sm:text-center font-bold mt-2'>Menu</p>
           <div className='px-2 flex relative flex-col gap-3 pt-2'>
             {resFoods.map((food,index) => (
-              <div key={index} className='flex mx-auto gap-2 max-h-[140px] py-2 px-2 shadow-lg rounded-md'>
+              <div key={index} className='flex gap-2 max-h-[120px] min-h-[120px] py-2 px-2 shadow-lg rounded-md'>
                 <div className='max-w-[30vw] min-w-[30vw] h-[100px]'>
                 {/* <iframe className='w-full h-full object-cover' src={Array.isArray(food.imageUrls) ? food.imageUrls[0] : food.imageUrls}></iframe> */}
-                  <img src={food.imageUrls} alt={food.name} className='w-full h-full object-cover' />
+                  <img src={food.imageUrls} alt={food.name} className='w-full rounded-lg h-full object-cover' />
                 </div>
-                <div>
+                <div className='w-70vw h-[120px]'>
                   <div className='flex justify-between'>
                     <div
                       className={`flex justify-center items-center w-4 h-4 border rounded-sm ${food.isVeg ? 'border-green-600' : 'border-red-600'}`}
@@ -233,8 +233,8 @@ const { currentUser } = useSelector((state) => state.user);
 
                   </div>
                   <div className='flex justify-between'>
-                    <div>
-                      <p className='text-[14px] font-medium'>{food.name}</p>
+                    <div className='flex flex-col gap-3'>
+                      <p className='text-[14px] w-30 h-10 font-medium'>{food.name}</p>
                       <p className='text-[10px] font-normal'>{food.description.length>20 ? food.description.slice(0,20)+"...": food.description || "Healthy food.." }</p>
                     </div>
                     <div className='w-[61px] bg-slate-200 mt-2 flex justify-center items-center h-[16px] rounded-sm'>
