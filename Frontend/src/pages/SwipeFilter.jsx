@@ -15,12 +15,9 @@ const SwipeFilter = () => {
   // Select the current user from Redux state
   const currentUser = useSelector((state) => state.user.currentUser);
 
-  // Function to close the popup and navigate to the bucket
+  // Function to close the popup without navigating to the bucket
   const closePopup = () => {
-    setIsOpen(false);
-    setTimeout(() => {
-      navigate('/bucket'); // Navigate to another page after animation ends
-    }, 50);
+    setIsOpen(false); // Only close the popup, do not navigate
   };
 
   // Check if the user is authenticated, if not navigate to sign-in
@@ -63,7 +60,7 @@ const SwipeFilter = () => {
 
     let cardCount = 0;
     if (isOpen) {
-      const timer = setTimeout(closePopup, 4000); // Close popup after 4 seconds
+      const timer = setTimeout(closePopup, 4000); // Close popup after 4 seconds without navigation
       return () => clearTimeout(timer); // Cleanup the timer on component unmount or when state changes
     }
 

@@ -39,7 +39,7 @@ const Home = () => {
   const updateLocationOnBackend = async (userId, latitude, longitude) => {
     try {
       console.log('Sending Data:', { userId, latitude, longitude });  
-      const response = await fetch('/api/user/update-location', {
+      const response = await fetch('http://localhost:3000/api/user/update-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
