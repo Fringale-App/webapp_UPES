@@ -1,7 +1,7 @@
-import React from 'react'
-import res from '../../Images/res3.jpg'
-import fringaleLogo from '../../Images/fringaleLogo.png'
-import wada from '../../Images/wada.jpg'
+import React from 'react';
+import res from '../../Images/res3.jpg';
+import fringaleLogo from '../../Images/fringaleLogo.png';
+import wada from '../../Images/wada.jpg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { FaSearch } from "react-icons/fa";
@@ -15,91 +15,61 @@ import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-
 import { NavLink } from 'react-router-dom';
-// const foodItems = [
-//   {
-//     name: "Cheese Burger",
-//     price: 120,
-//     isVeg: true,
-//     image: wada,
-//     description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun."
-//   },
-//   {
-//     name: "Pizza",
-//     price: 100,
-//     isVeg: false,
-//     image: "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4=",
-//     description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame."
-//   },
-//   // Add other food items here...
-// ];
-// const shops = [
-//   {
-//     name: "Restaurant Name",
-
-//     imageUrls: [res, "https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4="],
-//     time: "8 AM - 6 PM",
-//     priceRange: "40-200",
-//     description: "A cheeseburger is a classic American dish that combines a juicy beef patty with a slice of melted cheese, typically served on a sesame bun.",
-//     address: "Address 1 (First Floor)"
-//   },
-//   {
-//     name: "Pizza",
-
-//     imageUrls: ["https://media.istockphoto.com/id/520410807/photo/cheeseburger.jpg?s=612x612&w=0&k=20&c=fG_OrCzR5HkJGI8RXBk76NwxxTasMb1qpTVlEM0oyg4="],
-//     time: "8 AM - 6 PM",
-//     priceRange: "40-200",
-//     description: "A Pizza is a classic Italian dish that combines a soft crust with a slice of melted cheese, typically served on a sesame.",
-//     address: "Address 2"
-//   },
-//   // Add other food items here...
-// ];
-
 
 function RestaurantPage() {
-
   SwiperCore.use([Navigation]);
+
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const params = useParams()
+  const params = useParams();
   const [resFoods, setResFoods] = useState([]);
-const { currentUser } = useSelector((state) => state.user);
-
-
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/restaurant/get/${params.id}`);
+        
+        const token = currentUser?.token; 
+        const res = await fetch(`http://localhost:3000/api/restaurant/get/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
-        if (data.success === false) {
-          setError(true);
-          setLoading(false);
-          return;
+        
+        if (!res.ok || data.success === false) {
+          throw new Error('Failed to fetch restaurant details');
         }
+
         setRestaurant(data);
-        const response = await fetch(`/api/restaurant/foods/${params.id}`);
+
+        // Fetch restaurant food items
+        const response = await fetch(`http://localhost:3000/api/restaurant/foods/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token if required
+          },
+        });
         const info = await response.json();
-        if (info.success === false) {
-          setError(true);
-          setLoading(false);
-          return;
+
+        if (!response.ok || info.success === false) {
+          throw new Error('Failed to fetch restaurant foods');
         }
+
         setResFoods(info);
-        // console.log("the info ",info)
-        // console.log("the data ",resFoods[0].imageUrls)
-        setLoading(false);
         setError(false);
       } catch (error) {
+        console.error(error);
         setError(true);
+      } finally {
         setLoading(false);
       }
     };
+
     fetchRestaurant();
-  }, [/*params.restaurantId*/]);
+  }, [params.id, currentUser]);
   return (
     <main>
       {loading && <p className='text-center my-7 text-2xl'>Loading...</p>}
