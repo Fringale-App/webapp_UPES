@@ -37,59 +37,14 @@ function Filter() {
                         <input type="checkbox" id='nonveg' onChange={changeHandler} />NON VEG
 
                     </div>
-                    <div className='border-2 p-1 rounded-md'>
+                    {/* <div className='border-2 p-1 rounded-md'>
                         <input type="checkbox" />EGG
 
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className='w-full h-[1px] bg-black'></div>
-            <div>
-                <p className='text-[16px] font-semibold'>Any Specific Cuisines</p>
-                <p className='text-[12px] font-light'>Select the cuisine you want to have</p>
-                <div className="flex justify-between p-2">
-                    {/* Left side checkboxes */}
-                    <div className="flex flex-col space-y-1">
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            Fast Food
-                        </label>
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            Home Cooked
-                        </label>
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            Desserts
-                        </label>
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            Chinese
-                        </label>
-                    </div>
-
-                    {/* Right side checkboxes */}
-                    <div className="flex flex-col space-y-1">
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            North Indian
-                        </label>
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            Italian
-                        </label>
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            Street Food
-                        </label>
-                        <label className="flex items-center text-[16px] font-semibold">
-                            <input type="checkbox" className="mr-2" />
-                            South Indian
-                        </label>
-                    </div>
-                </div>
-
-            </div>
+           
             {/* <div className='w-full h-[1px] bg-black'></div> */}
 
             {/* <div>
