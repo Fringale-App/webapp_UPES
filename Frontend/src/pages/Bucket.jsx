@@ -33,7 +33,7 @@ const Bucket = () => {
                     <div className="flex pt-2 gap-2">
                       <div className='w-[105px] flex items-center justify-center h-[130px] overflow-hidden'>
                         <img
-                          src={item?.image || "https://via.placeholder.com/150"}
+                          src={item?.imageUrls || "https://via.placeholder.com/150"}
                           alt={item?.name || "Unknown Item"}
                           className="w-full h-2/3 rounded-md"
                         />
@@ -54,7 +54,7 @@ const Bucket = () => {
                         <div className='flex justify-between pr-3 pb-3'>
                           <div className='flex justify-start items-center text-[14px] font-semibold text-[#212121]'>
                             <FaRupeeSign />
-                            {item.price}
+                            {item.regularPrice}
                           </div>
                           <button
                             onClick={() => handleRemove(item)}

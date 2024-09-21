@@ -1,12 +1,23 @@
-import React,{useState} from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 function Filter() {
+    const navigate = useNavigate()
     const [selectedLevel, setSelectedLevel] = useState(null);
+    const [data, setData] = useState({})
+    function changeHandler(e) {
+        setData({ ...data, [e.target.id]: e.target.checked })
+    }
+    console.log(data)
+    function submitHandler (e){
+        e.preventDefault();
+        navigate('/swipe-filter', {state:data})
 
-    const handleSelect = (level) => {
-        setSelectedLevel((prevLevel) => (prevLevel === level ? null : level));
-    };
+    }
+
+    // const handleSelect = (level) => {
+    //     setSelectedLevel((prevLevel) => (prevLevel === level ? null : level));
+    // };
     return (
         <div className='p-4 flex flex-col gap-2'>
             <div className='flex flex-col justify-center leading-tight'>
@@ -19,11 +30,11 @@ function Filter() {
                 <p className='font-light text-[12px]'>Choose what you prefer for yourself</p>
                 <div className='text-[16px] font-semibold text-[rgba(0,0,0,0.5)] flex gap-3 py-2 px-2'>
                     <div className='border-2 p-1 rounded-md'>
-                        <input type="checkbox" />VEG
+                        <input type="checkbox" id='veg' onChange={changeHandler} />VEG
 
                     </div>
                     <div className='border-2 p-1 rounded-md'>
-                        <input type="checkbox" />NON VEG
+                        <input type="checkbox" id='nonveg' onChange={changeHandler} />NON VEG
 
                     </div>
                     <div className='border-2 p-1 rounded-md'>
@@ -77,11 +88,11 @@ function Filter() {
                         </label>
                     </div>
                 </div>
-                
+
             </div>
-                <div className='w-full h-[1px] bg-black'></div>
-            
-                <div>
+            {/* <div className='w-full h-[1px] bg-black'></div> */}
+
+            {/* <div>
             <h1 className='font-bold text-[18px]'>Spice Level</h1>
             <p className='text-[12px] font-black-300 leading-[20px]'>
                 How Much Spice you can handle
@@ -99,13 +110,13 @@ function Filter() {
                     </div>
                 ))}
             </div>
-        </div>
+        </div> */}
 
-     <NavLink to="/swipe-filter" className="mx-auto bg-[rgba(0,100,60,1)] w-full text-white flex justify-center items-center p-1 rounded-md text-[20px] font-bold">
-                <button>
+
+            <button type="button" onClick={submitHandler} className="mx-auto bg-[rgba(0,100,60,1)] w-full text-white flex justify-center items-center p-1 rounded-md text-[20px] font-bold">
                 START SWIPING{">>"}
-                </button>
-            </NavLink>
+            </button>
+
 
         </div>
     )
