@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MdOutlineLocationOn } from "react-icons/md";
-import { FaRupeeSign, FaSearch, FaRegHeart } from "react-icons/fa";
+import { FaRupeeSign, FaSearch, FaRegHeart, FaHeart } from "react-icons/fa";
+import { toggleLikeFood } from '../redux/food/foodSlice';
 import 'swiper/css/bundle';
 
 function RestaurantPage() {
@@ -11,19 +12,20 @@ function RestaurantPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [resFoods, setResFoods] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // New state for search input
-  const { currentUser } = useSelector((state) => state.user);
+  const [searchQuery, setSearchQuery] = useState('');
   const params = useParams();
+  const dispatch = useDispatch();
+
+  const { likedFoods = [] } = useSelector((state) => state.food);
+
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
         setLoading(true);
-        const token = currentUser?.token;
-        const res = await fetch(`http://localhost:3000/api/restaurant/get/${params.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await fetch(`/api/restaurant/get/${params.id}`, {
+          credentials: 'include',
         });
         const data = await res.json();
         if (!res.ok || data.success === false) {
@@ -31,14 +33,14 @@ function RestaurantPage() {
         }
         setRestaurant(data);
 
-        const response = await fetch(`/api/restaurant/foods/${params.id}`);
+        const response = await fetch(`/api/restaurant/foods/${params.id}`, {
+          credentials: 'include',
+        });
         const info = await response.json();
         if (!response.ok || info.success === false) {
           throw new Error('Failed to fetch restaurant foods');
         }
         setResFoods(info);
-        setLoading(false);
-        setError(false);
       } catch (error) {
         console.error(error);
         setError(true);
@@ -49,7 +51,13 @@ function RestaurantPage() {
     fetchRestaurant();
   }, [params.id, currentUser]);
 
-  // Filter the resFoods based on the search query
+  const handleLike = (e, food) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(toggleLikeFood(food.id)); // Pass only the food ID
+  };
+  
+
   const filteredFoods = resFoods.filter((food) =>
     food.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -104,7 +112,7 @@ function RestaurantPage() {
                 className="w-full z-10 pl-10 pr-3 py-2 border border-[#424242] rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Search for food items..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)} // Update search query state on input change
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </form>
           </div>
@@ -112,30 +120,42 @@ function RestaurantPage() {
           <p className='ml-4 sm:text-center font-bold mt-2'>Menu</p>
           <div className='px-2 flex flex-col gap-3 pt-2'>
             {filteredFoods.length > 0 ? (
-              filteredFoods.map((food, index) => (
-                <div key={index} className='flex gap-2 max-h-[120px] min-h-[120px] py-2 px-2 shadow-lg rounded-md bg-white'>
-                  <div className='max-w-[30vw] min-w-[30vw] h-[100px]'>
-                    <img src={food.imageUrls} alt={food.name} className='w-full h-full object-cover rounded-lg' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='flex justify-between'>
-                      <div className={`flex justify-center items-center w-4 h-4 border rounded-sm ${food.isVeg ? 'border-green-600' : 'border-red-600'}`}>
-                        <div className={`w-2 h-2 rounded-full ${food.isVeg ? 'bg-green-600' : 'bg-red-600'}`} />
+              filteredFoods.map((food) => {
+                const isLiked = likedFoods.includes(food.id);
+                return (
+                  <div key={food.id} className='flex gap-2 max-h-[120px] min-h-[120px] py-2 px-2 shadow-lg rounded-md bg-white'>
+                    <div className='max-w-[30vw] min-w-[30vw] h-[100px]'>
+                      <img src={food.imageUrls} alt={food.name} className='w-full h-full object-cover rounded-lg' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='flex justify-between'>
+                        <div className={`flex justify-center items-center w-4 h-4 border rounded-sm ${food.isVeg ? 'border-green-600' : 'border-red-600'}`}>
+                          <div className={`w-2 h-2 rounded-full ${food.isVeg ? 'bg-green-600' : 'bg-red-600'}`} />
+                        </div>
+                      </div>
+                      <div className='flex flex-col gap-3'>
+                        <p className='text-[14px] font-medium'>{food.name}</p>
+                        <p className='text-[10px] font-normal'>{food.description.slice(0, 20)}...</p>
+                      </div>
+                      <div className='flex justify-between'>
+                        <div className='flex items-center text-[14px] font-semibold text-[#212121]'>
+                          <FaRupeeSign />{food.regularPrice}
+                        </div>
+                        <button 
+                          onClick={(e) => handleLike(e, food)}
+                          className="focus:outline-none"
+                        >
+                          {isLiked ? (
+                            <FaHeart className='text-red-600' />
+                          ) : (
+                            <FaRegHeart className='text-[#212121]' />
+                          )}
+                        </button>
                       </div>
                     </div>
-                    <div className='flex flex-col gap-3'>
-                      <p className='text-[14px] font-medium'>{food.name}</p>
-                      <p className='text-[10px] font-normal'>{food.description.slice(0, 20)}...</p>
-                    </div>
-                    <div className='flex justify-between'>
-                      <div className='flex items-center text-[14px] font-semibold text-[#212121]'>
-                        <FaRupeeSign />{food.regularPrice}
-                      </div>
-                      <FaRegHeart className='text-[#212121]' />
-                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p className='text-center'>No food items found</p>
             )}

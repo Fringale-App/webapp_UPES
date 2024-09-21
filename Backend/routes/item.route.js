@@ -1,5 +1,5 @@
 import express from 'express'
-// import { verifyToken } from '../utils/verifyToken.js'
+import { verifyToken } from '../utils/verifyToken.js'
 import { addItem, deleteItem, getAllItems, getItem, getItems, insertManyItems, updateItem } from '../controllers/item.controller.js'
 
 

@@ -80,46 +80,46 @@ export const signup = async (req, res, next) => {
 
   
 
-  export const signin = async (req, res, next) => {
-    try {
-      const { email, password } = req.body;
-      // console.log("Received SignIn request with email:", email);
-      
-      // Check if the user exists
-      const validUser = await User.findOne({ email });
-      if (!validUser) {
-        // console.error("User not found with email:", email);
-        return res.status(400).json({ success: false, message: "Invalid email" });
-      }
-  
-      // Validate password
-      const isPassword = bcrypt.compareSync(password, validUser.password);
-      if (!isPassword) {
-        // console.error("Invalid password for user:", validUser);
-        return res.status(400).json({ success: false, message: "Invalid password" });
-      }
-  
-      // Remove the password from the response object
-      const { password: pass, ...rest } = validUser._doc;
-  
-      // Update location if latitude and longitude are present
-      const { latitude, longitude } = req.body;
-      if (latitude && longitude) {
-        validUser.location = { latitude, longitude };
-        await validUser.save();
-      }
-  
-      // console.log("SignIn successful for user:", validUser.email);
-      const token = jwt.sign({id:validUser._id},process.env.SECRET)
-      res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
+export const signin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Check if the user exists
+    const validUser = await User.findOne({ email });
+    if (!validUser) {
+      return res.status(400).json({ success: false, message: "Invalid email" });
     }
-      
-     catch (err) {
-      console.error("Error in signin:", err);  // Log detailed error
-      next(err);
-    }
-  };
 
+    // Validate password
+    const isPassword = bcrypt.compareSync(password, validUser.password);
+    if (!isPassword) {
+      return res.status(400).json({ success: false, message: "Invalid password" });
+    }
+
+    // Remove the password from the response object
+    const { password: pass, ...rest } = validUser._doc;
+
+    // Generate token
+    const token = jwt.sign({ id: validUser._id }, process.env.SECRET);
+
+    // Set token as HTTP-only cookie
+    res.cookie('access_token', token, { 
+      httpOnly: true, 
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+
+    // Send user data in response (excluding password)
+    res.status(200).json({
+      success: true,
+      user: rest
+    });
+
+  } catch (err) {
+    console.error("Error in signin:", err);
+    next(err);
+  }
+};
   export const google = async (req,res,next) =>{
     try{
         const user = await User.findOne({email:req.body.email})
