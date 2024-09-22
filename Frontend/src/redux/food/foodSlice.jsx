@@ -1,60 +1,39 @@
+// foodSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  currentIndex: 0,
-  bucket: [],
-  likedFoods: [],
+  bucket: [], // Stores liked food items
+  currentIndex: 0, // Tracks the current swipe index
 };
 
-const foodSlice = createSlice({
+export const foodSlice = createSlice({
   name: 'food',
   initialState,
   reducers: {
     likeFood: (state, action) => {
-      if (action.payload && action.payload.id) {
-        if (!state.bucket.some(item => item.id === action.payload.id)) {
-          state.bucket.push(action.payload);
-        }
-        if (!state.likedFoods.includes(action.payload.id)) {
-          state.likedFoods.push(action.payload.id);
-        }
-        state.currentIndex += 1;
+      const foodItem = action.payload;
+      // Check if the item is already in the bucket
+      const isAlreadyLiked = state.bucket.some(item => item.name === foodItem.name);
+      
+      if (!isAlreadyLiked) {
+        // Add the item only if it's not already in the bucket
+        const itemWithId = { ...foodItem, id: Date.now().toString() };
+        state.bucket.push(itemWithId);
       }
-    },
-    dislikeFood: (state) => {
       state.currentIndex += 1;
     },
-    resetFood: (state) => {
-      state.currentIndex = 0;
-      state.bucket = [];
-      state.likedFoods = [];
+    dislikeFood: (state, action) => {
+      state.currentIndex += 1;
     },
     removeFromBucket: (state, action) => {
-      if (action.payload && action.payload.id) {
-        state.bucket = state.bucket.filter(item => item && item.id !== action.payload.id);
-        state.likedFoods = state.likedFoods.filter(id => id !== action.payload.id);
-      }
-    },
-    toggleLikeFood: (state, action) => {
       const foodId = action.payload;
-      if (foodId === undefined) return; // Guard clause
-      
-      const index = state.likedFoods.indexOf(foodId);
-      if (index > -1) {
-        state.likedFoods.splice(index, 1);
-        state.bucket = state.bucket.filter(item => item.id !== foodId);
-      } else {
-        state.likedFoods.push(foodId);
-        const foodItem = state.bucket.find(item => item.id === foodId);
-        if (foodItem && !state.bucket.some(item => item.id === foodId)) {
-          state.bucket.push(foodItem);
-        }
-      }
+      state.bucket = state.bucket.filter(item => item.id !== foodId);
     },
-    
+    resetIndex: (state) => {
+      state.currentIndex = 0;
+    }
   },
 });
 
-export const { likeFood, dislikeFood, resetFood, removeFromBucket, toggleLikeFood } = foodSlice.actions;
-
+export const { likeFood, dislikeFood, removeFromBucket, resetIndex } = foodSlice.actions;
 export default foodSlice.reducer;

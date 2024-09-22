@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MdOutlineLocationOn } from "react-icons/md";
 import { FaRupeeSign, FaSearch, FaRegHeart, FaHeart } from "react-icons/fa";
-import { toggleLikeFood } from '../redux/food/foodSlice';
+// import { toggleLikeFood } from '../redux/food/foodSlice';
 import 'swiper/css/bundle';
 
 function RestaurantPage() {
@@ -16,30 +16,25 @@ function RestaurantPage() {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { likedFoods = [] } = useSelector((state) => state.food);
-
+  const likedFoods = useSelector((state) => state.food.likedFoods || []);
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         const res = await fetch(`/api/restaurant/get/${params.id}`, {
-          credentials: 'include',
+         
         });
         const data = await res.json();
-        if (!res.ok || data.success === false) {
-          throw new Error('Failed to fetch restaurant details');
-        }
+        if (!res.ok || data.success === false) throw new Error('Failed to fetch restaurant details');
         setRestaurant(data);
 
         const response = await fetch(`/api/restaurant/foods/${params.id}`, {
-          credentials: 'include',
+          
         });
         const info = await response.json();
-        if (!response.ok || info.success === false) {
-          throw new Error('Failed to fetch restaurant foods');
-        }
+        if (!response.ok || info.success === false) throw new Error('Failed to fetch restaurant foods');
         setResFoods(info);
       } catch (error) {
         console.error(error);
@@ -53,10 +48,9 @@ function RestaurantPage() {
 
   const handleLike = (e, food) => {
     e.preventDefault();
-    e.stopPropagation();
-    dispatch(toggleLikeFood(food.id)); // Pass only the food ID
+    // e.stopPropagation();
+    // dispatch(toggleLikeFood(food.id));
   };
-  
 
   const filteredFoods = resFoods.filter((food) =>
     food.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -121,6 +115,7 @@ function RestaurantPage() {
           <div className='px-2 flex flex-col gap-3 pt-2'>
             {filteredFoods.length > 0 ? (
               filteredFoods.map((food) => {
+                
                 const isLiked = likedFoods.includes(food.id);
                 return (
                   <div key={food.id} className='flex gap-2 max-h-[120px] min-h-[120px] py-2 px-2 shadow-lg rounded-md bg-white'>

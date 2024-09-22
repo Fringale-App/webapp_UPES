@@ -1,127 +1,161 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { likeFood, dislikeFood } from '../redux/food/foodSlice'; // Adjust the import path as needed
-import burger from '../../Images/burger.png';
-import Card from '../components/FoodSwipeCard'; // Assuming this is a class-based component
+import { likeFood, dislikeFood, resetIndex } from '../redux/food/foodSlice'; 
+import Card from '../components/FoodSwipeCard';
 import PopUp from "../components/PopUp";
-import { useNavigate } from "react-router";
-import { useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import '../css/style.css';
 
 const SwipeFilter = () => {
   const [foodItems, setFoodItems] = useState([]);
   const location = useLocation();
   const condition = location.state || {};
-  const [loading, setLoading] = useState(true); // Set loading to true initially
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
+  const [likePopup, setLikePopup] = useState(false);
   const navigate = useNavigate();
 
-  // Select the current user from Redux state
   const currentUser = useSelector((state) => state.user.currentUser);
+  const bucket = useSelector((state) => state.food.bucket);
+  const currentIndex = useSelector((state) => state.food.currentIndex);
 
-  // Function to close the popup without navigating to the bucket
-  const closePopup = () => {
-    setIsOpen(false); // Only close the popup, do not navigate
+  const [highlightedButton, setHighlightedButton] = useState(null);
+  const swiperRef = useRef(null);
+
+  const closePopup = () => setIsOpen(false);
+
+  const handleButtonHighlight = (buttonType) => {
+    setHighlightedButton(buttonType);
+    setTimeout(() => {
+      setHighlightedButton(null);
+    }, 1000); // 1 second delay
   };
 
-  // Check if the user is authenticated, if not navigate to sign-in
+  const handleLike = useCallback((currentFood) => {
+    if (!currentFood) return;
+    console.log("Like action triggered");
+    dispatch(likeFood(currentFood));
+    setLikePopup(true);
+    handleButtonHighlight('like');
+  }, [dispatch]);
+
+  const handleDislike = useCallback((currentFood) => {
+    if (!currentFood) return;
+    console.log("Dislike action triggered");
+    dispatch(dislikeFood(currentFood.id));
+    handleButtonHighlight('dislike');
+  }, [dispatch]);
+
   useEffect(() => {
     if (!currentUser) {
-      setIsOpen(true); // Show popup
+      setIsOpen(true);
       setTimeout(() => {
-        navigate('/sign-in'); // Redirect to sign-in after 4 seconds
+        navigate('/sign-in');
       }, 4000);
     }
   }, [currentUser, navigate]);
 
   useEffect(() => {
-    if (!currentUser) return; // Exit early if no user is logged in
+    if (!currentUser) return;
 
-    // Fetch food items when the component mounts
     const fetchingItems = async () => {
-      setLoading(true); // Start loading when fetching begins
+      setLoading(true);
       try {
         const res = await fetch('/api/item/swipe', {
-          method: 'POST', 
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(condition),
         });
         const data = await res.json();
-        console.log(data);
-        setFoodItems(data); // Set the food items state
+        setFoodItems(data);
+        dispatch(resetIndex());
       } catch (error) {
         console.error('Error fetching food items:', error);
       }
-      setLoading(false); // Stop loading after fetching completes
+      setLoading(false);
     };
 
     fetchingItems();
-  }, [currentUser, condition]);
+  }, [currentUser, condition, dispatch]);
 
   useEffect(() => {
-    if (foodItems.length === 0 || loading) return; // Wait for foodItems to be set and loading to complete
-
-    const swiper = document.querySelector("#swiper");
-    const like = document.querySelector("#like");
-    const dislike = document.querySelector("#dislike");
-    
-    let cardCount = 0;
+    if (foodItems.length === 0 || loading || !swiperRef.current) return;
 
     const appendNewCard = () => {
-      if (foodItems.length === 0) return; // Prevent appending if no items
+      if (currentIndex >= foodItems.length) return;
 
-      const currentFood = foodItems[cardCount % foodItems.length];
+      const currentFood = foodItems[currentIndex];
       const card = new Card({
         imageUrl: currentFood.imageUrls,
         foodName: currentFood.name,
-        onDismiss: appendNewCard,
-        onLike: () => {
-          setIsOpen(true);
-          dispatch(likeFood(currentFood));
-          like.style.animationPlayState = "running";
-          like.classList.toggle("trigger");
+        onDismiss: () => {
+          dispatch({ type: 'food/incrementIndex' });
+          swiperRef.current.innerHTML = '';
+          appendNewCard();
         },
-        onDislike: () => {
-          dispatch(dislikeFood());
-          dislike.style.animationPlayState = "running";
-          dislike.classList.toggle("trigger");
-        },
+        onLike: () => handleLike(currentFood),
+        onDislike: () => handleDislike(currentFood),
       });
 
-      swiper.append(card.element);
-      cardCount++;
-
-      const cards = swiper.querySelectorAll(".card:not(.dismissing)");
-      cards.forEach((card, index) => {
-        card.style.setProperty("--i", index);
-      });
+      swiperRef.current.innerHTML = '';
+      swiperRef.current.append(card.element);
     };
 
-    // Clear swiper before appending new cards
-    swiper.innerHTML = '';
+    appendNewCard();
 
-    for (let i = 0; i < foodItems.length; i++) {
-      appendNewCard();
+  }, [foodItems, loading, currentIndex, dispatch, handleLike, handleDislike]);
+
+  const handleButtonClick = (action) => {
+    const currentFood = foodItems[currentIndex];
+    if (action === 'like') {
+      handleLike(currentFood);
+    } else {
+      handleDislike(currentFood);
     }
-    
-  }, [foodItems, loading]); // Only run when foodItems or loading changes
+    // Move to the next card
+    dispatch({ type: 'food/incrementIndex' });
+    if (swiperRef.current) {
+      swiperRef.current.innerHTML = '';
+      if (currentIndex + 1 < foodItems.length) {
+        const nextCard = new Card({
+          imageUrl: foodItems[currentIndex + 1].imageUrls,
+          foodName: foodItems[currentIndex + 1].name,
+          onDismiss: () => {},
+          onLike: () => {},
+          onDislike: () => {},
+        });
+        swiperRef.current.append(nextCard.element);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col items-center relative">
-      <div id="swiper" className="relative w-75 h-[75vh] perspective">
-        {/* Cards will be appended here dynamically */}
+      <div id="swiper" ref={swiperRef} className="relative w-75 h-[75vh] perspective">
         {loading && <p>Loading...</p>}
       </div>
 
       <div className="flex mt-10 gap-16">
-        <button id="dislike" className="px-6 py-2 bg-red-500 text-white font-bold rounded-full">
+        <button 
+          id="dislike" 
+          className={`px-6 py-2 ${
+            highlightedButton === 'dislike' ? 'bg-red-800' : 'bg-red-500'
+          } text-white font-bold rounded-full transition-colors duration-300`}
+          onClick={() => handleButtonClick('dislike')}
+        >
           <img src="https://img.icons8.com/emoji/48/000000/thumbs-down-emoji.png" alt="Dislike" />
         </button>
-        <button id="like" className="px-6 py-2 bg-green-500 text-white font-bold rounded-full">
+        <button 
+          id="like" 
+          className={`px-6 py-2 ${
+            highlightedButton === 'like' ? 'bg-green-800' : 'bg-green-500'
+          } text-white font-bold rounded-full transition-colors duration-300`}
+          onClick={() => handleButtonClick('like')}
+        >
           <img
             src="https://img.icons8.com/?size=48&id=FYJ9HNSqf_uK&format=png"
             alt="Thumbs Up"
@@ -130,12 +164,22 @@ const SwipeFilter = () => {
         </button>
       </div>
 
+      {/* <div className="bucket-content mt-10">
+        <h3>Bucket Items:</h3>
+        {bucket.length > 0 ? (
+          bucket.map((item, index) => (
+            <p key={index}>{item.name}</p>
+          ))
+        ) : (
+          <p>No liked items yet.</p>
+        )}
+      </div> */}
+
+      {likePopup && <PopUp isOpen={true} message="Item Liked!" onClose={() => setLikePopup(false)} />}
+
       <PopUp isOpen={isOpen} onClose={closePopup} />
     </div>
   );
 };
 
 export default SwipeFilter;
-
-
-
