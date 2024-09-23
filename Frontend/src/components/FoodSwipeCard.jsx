@@ -1,6 +1,7 @@
 class Card {
-  constructor({ imageUrl,foodName, onDismiss, onLike, onDislike }) {
+  constructor({ imageUrl,foodName,price, onDismiss, onLike, onDislike }) {
     this.imageUrl = imageUrl;
+    this.price = price
     this.onDismiss = onDismiss;
     this.onLike = onLike;
     this.onDislike = onDislike;
@@ -44,7 +45,7 @@ class Card {
     // Add price
     const foodPrice = document.createElement("p");
     foodPrice.classList.add("text-white", "text-sm");
-    foodPrice.textContent = "Starting from $10"; // Replace with dynamic data if needed
+    foodPrice.textContent = `Starting from ₹${this.price}`; // Replace with dynamic data if needed
     relativeContainer.appendChild(foodPrice);
 
     // Add image

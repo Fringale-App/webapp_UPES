@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import '../css/rangeinput.css'
 
 function Filter() {
     const navigate = useNavigate()
+    // const [priceRange,setPriceRange] = useState(40)
     const [selectedLevel, setSelectedLevel] = useState(null);
-    const [data, setData] = useState({})
+    const [data, setData] = useState({price:20})
     function changeHandler(e) {
+        if(e.target.type==="range"){
+            setData({ ...data, [e.target.id]: e.target.value })
+        }else{
         setData({ ...data, [e.target.id]: e.target.checked })
+        }
     }
     console.log(data)
     function submitHandler (e){
@@ -44,6 +50,11 @@ function Filter() {
                 </div>
             </div>
             <div className='w-full h-[1px] bg-black'></div>
+            <div className='flex gap-3'>
+                <input type="range" id='price' className='min-w-52 max-w-52 price-range-input' min={5} max={400} value={data.price} onChange={changeHandler} />
+                <p className='text-xs'>Set Price Range: <span className='font-bold text-sm text-center'>{data.price}</span></p>
+            </div>
+            <div className='w-full h-[1px] bg-black'></div>
            
             {/* <div className='w-full h-[1px] bg-black'></div> */}
 
@@ -68,7 +79,7 @@ function Filter() {
         </div> */}
 
 
-            <button type="button" onClick={submitHandler} className="mx-auto bg-[rgba(0,100,60,1)] w-full text-white flex justify-center items-center p-1 rounded-md text-[20px] font-bold">
+            <button type="button" onClick={submitHandler} className="mx-auto mt-2 bg-[rgba(0,100,60,1)] w-full text-white flex justify-center items-center p-1 rounded-md text-[20px] font-bold">
                 START SWIPING{">>"}
             </button>
 

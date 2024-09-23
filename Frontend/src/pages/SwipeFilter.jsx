@@ -92,6 +92,7 @@ const SwipeFilter = () => {
       const card = new Card({
         imageUrl: currentFood.imageUrls,
         foodName: currentFood.name,
+        price:currentFood.regularPrice,
         onDismiss: () => {
           dispatch({ type: 'food/incrementIndex' });
           swiperRef.current.innerHTML = '';

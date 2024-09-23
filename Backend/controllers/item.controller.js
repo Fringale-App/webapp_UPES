@@ -33,38 +33,39 @@ export const getAllItems = async (req, res,next) => {
       }
 };
 export const getItems = async (req, res, next) => {
-  const { veg, nonveg } = req.body;
-  // console.log(req.body)
-  // If both veg and nonveg are false or both are true
+  const { veg, nonveg, price } = req.body;  // Destructure veg, nonveg, and price from the request body
+
+  // Base query object
+  let query = {};
+
+  // If both veg and nonveg are false or both are true, fetch all items
   if ((!veg && !nonveg) || (veg && nonveg)) {
-    try {
-      const items = await Item.find(); // await added
-      res.status(200).json(items);
-    } catch (error) {
-      console.error(error);
-      next(error); // Passing the error to the next middleware
-    }
-
+    query = {};
   } else if (veg) {
-    try {
-      const items = await Item.find({ isVeg: true }); // await added
-      res.status(200).json(items);
-    } catch (error) {
-      console.error(error);
-      next(error); // Passing the error to the next middleware
-    }
-
+    // Fetch only veg items
+    query.isVeg = true;
   } else {
-    try {
-      const items = await Item.find({ isVeg: false }); // await added
-      // console.log(items)
-      res.status(200).json(items);
-    } catch (error) {
-      console.error(error);
-      next(error); // Passing the error to the next middleware
-    }
+    // Fetch only non-veg items
+    query.isVeg = false;
+  }
+
+  // If price is provided, add price filter (filter by regularPrice or discountPrice <= price)
+  if (price) {
+    query.$or = [
+      { regularPrice: { $lte: price } }
+    ];
+  }
+
+  try {
+    // Fetch items based on the query
+    const items = await Item.find(query);
+    res.status(200).json(items);
+  } catch (error) {
+    console.error(error);
+    next(error); // Passing the error to the next middleware
   }
 };
+
 
 
 // Get a single food item by ID
