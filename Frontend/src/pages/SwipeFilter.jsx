@@ -38,7 +38,7 @@ const SwipeFilter = () => {
       setTimeout(() => {
         navigate('/sign-in');
       }, 4000);
-      return; // Return early if no currentUser
+      return;
     }
 
     const fetchingItems = async () => {
@@ -61,12 +61,11 @@ const SwipeFilter = () => {
     };
 
     fetchingItems();
-  }, [currentUser, condition, dispatch]);
+  }, [currentUser, condition, dispatch, navigate]);
 
   useEffect(() => {
     if (foodItems.length === 0 || loading) return;
 
-    // Set a random item when foodItems updates
     const randomIndex = Math.floor(Math.random() * foodItems.length);
     setRandomItem(foodItems[randomIndex]);
   }, [foodItems, loading]);
@@ -75,7 +74,7 @@ const SwipeFilter = () => {
     setHighlightedButton(buttonType);
     setTimeout(() => {
       setHighlightedButton(null);
-    }, 1000); // 1 second delay
+    }, 1000);
   };
 
   const handleLike = useCallback((currentFood) => {
@@ -86,17 +85,18 @@ const SwipeFilter = () => {
       setMatchFailed(true);
       setTimeout(() => {
         setMatchFailed(false);
-        dispatch({ type: 'food/incrementIndex' }); // Move to the next card
+        dispatch({ type: 'food/incrementIndex' });
+        updateCard();
       }, 2000);
-      return; // Return to prevent further actions
+      return;
     }
 
     dispatch(likeFood(currentFood));
     setLikePopup(true);
     handleButtonHighlight('like');
 
-    // Move to the next card
     dispatch({ type: 'food/incrementIndex' });
+    updateCard();
   }, [dispatch, randomItem]);
 
   const handleDislike = useCallback((currentFood) => {
@@ -105,37 +105,34 @@ const SwipeFilter = () => {
     dispatch(dislikeFood(currentFood.id));
     handleButtonHighlight('dislike');
 
-    // Move to the next card
     dispatch({ type: 'food/incrementIndex' });
+    updateCard();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (foodItems.length === 0 || loading || !swiperRef.current) return;
-
-    const appendNewCard = () => {
-      if (currentIndex >= foodItems.length) return;
-
-      const currentFood = foodItems[currentIndex];
+  const updateCard = useCallback(() => {
+    if (swiperRef.current && currentIndex < foodItems.length) {
+      const nextFood = foodItems[currentIndex];
       const card = new Card({
-        imageUrl: currentFood.imageUrls,
-        foodName: currentFood.name,
-        price: currentFood.regularPrice,
+        imageUrl: nextFood.imageUrls,
+        foodName: nextFood.name,
+        price: nextFood.regularPrice,
         onDismiss: () => {
           dispatch({ type: 'food/incrementIndex' });
-          swiperRef.current.innerHTML = '';
-          appendNewCard();
+          updateCard();
         },
-        onLike: () => handleLike(currentFood),
-        onDislike: () => handleDislike(currentFood),
+        onLike: () => handleLike(nextFood),
+        onDislike: () => handleDislike(nextFood),
       });
 
       swiperRef.current.innerHTML = '';
       swiperRef.current.append(card.element);
-    };
+    }
+  }, [foodItems, currentIndex, dispatch, handleLike, handleDislike]);
 
-    appendNewCard();
-
-  }, [foodItems, loading, currentIndex, dispatch, handleLike, handleDislike]);
+  useEffect(() => {
+    if (foodItems.length === 0 || loading || !swiperRef.current) return;
+    updateCard();
+  }, [foodItems, loading, currentIndex, updateCard]);
 
   const handleButtonClick = (action) => {
     const currentFood = foodItems[currentIndex];
@@ -149,22 +146,6 @@ const SwipeFilter = () => {
       handleLike(currentFood);
     } else {
       handleDislike(currentFood);
-    }
-
-    // Move to the next card
-    dispatch({ type: 'food/incrementIndex' });
-    if (swiperRef.current) {
-      swiperRef.current.innerHTML = '';
-      if (currentIndex + 1 < foodItems.length) {
-        const nextCard = new Card({
-          imageUrl: foodItems[currentIndex + 1].imageUrls,
-          foodName: foodItems[currentIndex + 1].name,
-          onDismiss: () => {},
-          onLike: () => {},
-          onDislike: () => {},
-        });
-        swiperRef.current.append(nextCard.element);
-      }
     }
   };
 
@@ -203,4 +184,3 @@ const SwipeFilter = () => {
 };
 
 export default SwipeFilter;
-

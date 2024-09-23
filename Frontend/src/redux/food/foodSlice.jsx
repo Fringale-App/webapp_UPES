@@ -16,13 +16,15 @@ export const foodSlice = createSlice({
       const isAlreadyLiked = state.bucket.some(item => item.name === foodItem.name);
       
       if (!isAlreadyLiked) {
-        // Add the item only if it's not already in the bucket
         const itemWithId = { ...foodItem, id: Date.now().toString() };
         state.bucket.push(itemWithId);
       }
       state.currentIndex += 1;
     },
     dislikeFood: (state, action) => {
+      state.currentIndex += 1;
+    },
+    incrementIndex: (state) => {
       state.currentIndex += 1;
     },
     removeFromBucket: (state, action) => {
