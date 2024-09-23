@@ -8,29 +8,34 @@ import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function Header() {
-    const { currentUser } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state.user);  // Get current user from Redux
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
+
+    // Synchronize search term with the URL
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchTermFromUrl = urlParams.get('searchTerm');
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl);
+        }
+    }, [window.location.search]);
+
+    // Re-render when currentUser changes, especially the avatar
+    useEffect(() => {
+        console.log("currentUser",currentUser)
+        // This will trigger when currentUser or avatar changes
+    }, [currentUser]);
 
     // Handle form submission for search functionality
     const handleSubmit = (e) => {
         e.preventDefault();
-        const urlParams = new URLSearchParams(window.location.search); // URLSearchParams to manage query string
-        urlParams.set('searchTerm', searchTerm); // Set search term in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('searchTerm', searchTerm);
         const searchQuery = urlParams.toString();
-        navigate(`/search?${searchQuery}`); // Navigate to the search page with search term
+        navigate(`/search?${searchQuery}`);
     };
 
-    // Synchronize search term with the URL
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search); // Corrected 'location' to 'window.location'
-        const searchTermFromUrl = urlParams.get('searchTerm'); // Get search term from URL
-        if (searchTermFromUrl) {
-            setSearchTerm(searchTermFromUrl); // Set the search term if found in URL
-        }
-    }, [window.location.search]); // Dependency array includes 'window.location.search' for URL changes
-
-    // Navigate to the bucket page
     const goToBucket = () => {
         navigate('/bucket');
     };
@@ -53,8 +58,8 @@ function Header() {
                 {/* Profile icon */}
                 <NavLink to={currentUser ? "/profile" : "/signin"}>
                     <img className="cursor-pointer w-10 h-10 rounded-full mr-2 object-cover"
-                        src={currentUser ? currentUser.avatar : profile}
-                        alt={currentUser ? "User Avatar" : "Default Avatar"}
+                         src={currentUser ? currentUser.avatar : profile}  // Use currentUser avatar
+                         alt={currentUser ? "User Avatar" : "Default Avatar"}
                     />
                 </NavLink>
             </div>
@@ -62,14 +67,14 @@ function Header() {
             {/* Search Bar */}
             <div className="mt-4 mr-4 ml-4 relative">
                 <form onSubmit={handleSubmit}>
-                    <button type="submit"> {/* Added 'type="submit"' for better accessibility */}
+                    <button type="submit">
                         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </button>
 
                     <input
                         type="text"
-                        value={searchTerm} // Bind input value to searchTerm state
-                        onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on change
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="What do you want today? (e.g., burger, fries, etc.)"
                         className="w-full pl-10 pr-3 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
@@ -80,3 +85,5 @@ function Header() {
 }
 
 export default Header;
+
+

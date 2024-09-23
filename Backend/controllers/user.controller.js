@@ -3,12 +3,15 @@ import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken'
 
 export const updateUser = async (req,res,next)=>{
+  console.log("body: ",req.body)
   if(req.user.id !== req.params.id) return next(401,"not the correct token")
 
   try{
       if(req.body.password){
+        console.log("password",req.body.password)
           req.body.password = bcrypt.hashSync(req.body.password,10)
       }
+      console.log(req.params.id)
       const updatedUser = await User.findByIdAndUpdate(req.params.id,{
           $set:{
               name:req.body.name,
@@ -17,7 +20,7 @@ export const updateUser = async (req,res,next)=>{
               avatar:req.body.avatar,
           }
       },{new:true})
-
+      console.log("update user: ",updatedUser)
       const {password,...rest} = updatedUser._doc
       res.status(200).json(rest)
   }catch(err){
