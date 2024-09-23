@@ -5,8 +5,10 @@ import Card from '../components/FoodSwipeCard';
 import PopUp from "../components/PopUp";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../css/style.css';
+import PopUp2 from "../components/PopUp2";
 
 const SwipeFilter = () => {
+  const [randomItem, setRandomItem] = useState(null);
   const [foodItems, setFoodItems] = useState([]);
   const location = useLocation();
   const condition = location.state || {};
@@ -23,30 +25,12 @@ const SwipeFilter = () => {
 
   const [highlightedButton, setHighlightedButton] = useState(null);
   const swiperRef = useRef(null);
+  const [matchFailed, setMatchFailed] = useState(false);
 
-  const closePopup = () => setIsOpen(false);
-
-  const handleButtonHighlight = (buttonType) => {
-    setHighlightedButton(buttonType);
-    setTimeout(() => {
-      setHighlightedButton(null);
-    }, 1000); // 1 second delay
-  };
-
-  const handleLike = useCallback((currentFood) => {
-    if (!currentFood) return;
-    console.log("Like action triggered");
-    dispatch(likeFood(currentFood));
-    setLikePopup(true);
-    handleButtonHighlight('like');
-  }, [dispatch]);
-
-  const handleDislike = useCallback((currentFood) => {
-    if (!currentFood) return;
-    console.log("Dislike action triggered");
-    dispatch(dislikeFood(currentFood.id));
-    handleButtonHighlight('dislike');
-  }, [dispatch]);
+  const closePopup = () => {
+    setIsOpen(false);
+    setMatchFailed(false);
+  }
 
   useEffect(() => {
     if (!currentUser) {
@@ -54,11 +38,8 @@ const SwipeFilter = () => {
       setTimeout(() => {
         navigate('/sign-in');
       }, 4000);
+      return; // Return early if no currentUser
     }
-  }, [currentUser, navigate]);
-
-  useEffect(() => {
-    if (!currentUser) return;
 
     const fetchingItems = async () => {
       setLoading(true);
@@ -83,6 +64,52 @@ const SwipeFilter = () => {
   }, [currentUser, condition, dispatch]);
 
   useEffect(() => {
+    if (foodItems.length === 0 || loading) return;
+
+    // Set a random item when foodItems updates
+    const randomIndex = Math.floor(Math.random() * foodItems.length);
+    setRandomItem(foodItems[randomIndex]);
+  }, [foodItems, loading]);
+
+  const handleButtonHighlight = (buttonType) => {
+    setHighlightedButton(buttonType);
+    setTimeout(() => {
+      setHighlightedButton(null);
+    }, 1000); // 1 second delay
+  };
+
+  const handleLike = useCallback((currentFood) => {
+    if (!currentFood) return;
+    console.log("Like action triggered", currentFood);
+
+    if (randomItem && currentFood._id !== randomItem._id) {
+      setMatchFailed(true);
+      setTimeout(() => {
+        setMatchFailed(false);
+        dispatch({ type: 'food/incrementIndex' }); // Move to the next card
+      }, 2000);
+      return; // Return to prevent further actions
+    }
+
+    dispatch(likeFood(currentFood));
+    setLikePopup(true);
+    handleButtonHighlight('like');
+
+    // Move to the next card
+    dispatch({ type: 'food/incrementIndex' });
+  }, [dispatch, randomItem]);
+
+  const handleDislike = useCallback((currentFood) => {
+    if (!currentFood) return;
+    console.log("Dislike action triggered");
+    dispatch(dislikeFood(currentFood.id));
+    handleButtonHighlight('dislike');
+
+    // Move to the next card
+    dispatch({ type: 'food/incrementIndex' });
+  }, [dispatch]);
+
+  useEffect(() => {
     if (foodItems.length === 0 || loading || !swiperRef.current) return;
 
     const appendNewCard = () => {
@@ -92,7 +119,7 @@ const SwipeFilter = () => {
       const card = new Card({
         imageUrl: currentFood.imageUrls,
         foodName: currentFood.name,
-        price:currentFood.regularPrice,
+        price: currentFood.regularPrice,
         onDismiss: () => {
           dispatch({ type: 'food/incrementIndex' });
           swiperRef.current.innerHTML = '';
@@ -112,11 +139,18 @@ const SwipeFilter = () => {
 
   const handleButtonClick = (action) => {
     const currentFood = foodItems[currentIndex];
+
+    if (!currentFood) {
+      console.error('Current food is null or undefined');
+      return;
+    }
+
     if (action === 'like') {
       handleLike(currentFood);
     } else {
       handleDislike(currentFood);
     }
+
     // Move to the next card
     dispatch({ type: 'food/incrementIndex' });
     if (swiperRef.current) {
@@ -143,18 +177,14 @@ const SwipeFilter = () => {
       <div className="flex mt-10 gap-16">
         <button 
           id="dislike" 
-          className={`px-6 py-2 ${
-            highlightedButton === 'dislike' ? 'bg-red-800' : 'bg-red-500'
-          } text-white font-bold rounded-full transition-colors duration-300`}
+          className={`px-6 py-2 ${highlightedButton === 'dislike' ? 'bg-red-800' : 'bg-red-500'} text-white font-bold rounded-full transition-colors duration-300`}
           onClick={() => handleButtonClick('dislike')}
         >
           <img src="https://img.icons8.com/emoji/48/000000/thumbs-down-emoji.png" alt="Dislike" />
         </button>
         <button 
           id="like" 
-          className={`px-6 py-2 ${
-            highlightedButton === 'like' ? 'bg-green-800' : 'bg-green-500'
-          } text-white font-bold rounded-full transition-colors duration-300`}
+          className={`px-6 py-2 ${highlightedButton === 'like' ? 'bg-green-800' : 'bg-green-500'} text-white font-bold rounded-full transition-colors duration-300`}
           onClick={() => handleButtonClick('like')}
         >
           <img
@@ -165,22 +195,12 @@ const SwipeFilter = () => {
         </button>
       </div>
 
-      {/* <div className="bucket-content mt-10">
-        <h3>Bucket Items:</h3>
-        {bucket.length > 0 ? (
-          bucket.map((item, index) => (
-            <p key={index}>{item.name}</p>
-          ))
-        ) : (
-          <p>No liked items yet.</p>
-        )}
-      </div> */}
-
       {likePopup && <PopUp isOpen={true} message="Item Liked!" onClose={() => setLikePopup(false)} />}
-
       <PopUp isOpen={isOpen} onClose={closePopup} />
+      {matchFailed && <PopUp2 isOpen={true} onClose={closePopup} />}
     </div>
   );
 };
 
 export default SwipeFilter;
+
