@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MdOutlineLocationOn } from "react-icons/md";
 import { FaRupeeSign, FaSearch, FaRegHeart, FaHeart } from "react-icons/fa";
-// import { toggleLikeFood } from '../redux/food/foodSlice';
 import 'swiper/css/bundle';
+import { likeFood, removeFromBucket } from '../redux/food/foodSlice';
 
 function RestaurantPage() {
   const [restaurant, setRestaurant] = useState(null);
@@ -16,23 +16,19 @@ function RestaurantPage() {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const likedFoods = useSelector((state) => state.food.likedFoods || []);
   const { currentUser } = useSelector((state) => state.user);
+  const { bucket } = useSelector((state) => state.food);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/restaurant/get/${params.id}`, {
-         
-        });
+        const res = await fetch(`/api/restaurant/get/${params.id}`);
         const data = await res.json();
         if (!res.ok || data.success === false) throw new Error('Failed to fetch restaurant details');
         setRestaurant(data);
 
-        const response = await fetch(`/api/restaurant/foods/${params.id}`, {
-          
-        });
+        const response = await fetch(`/api/restaurant/foods/${params.id}`);
         const info = await response.json();
         if (!response.ok || info.success === false) throw new Error('Failed to fetch restaurant foods');
         setResFoods(info);
@@ -46,10 +42,18 @@ function RestaurantPage() {
     fetchRestaurant();
   }, [params.id, currentUser]);
 
-  const handleLike = (e, food) => {
+  const handleLike = async (e, food) => {
     e.preventDefault();
-    // e.stopPropagation();
-    // dispatch(toggleLikeFood(food.id));
+    const isInBucket = await bucket.some(item => item.name === food.name);
+
+    if (isInBucket) {
+      // Remove the food from the bucket
+      console.log("foodid:",food.id,"food_id:",food._id)
+      dispatch(removeFromBucket(food._id)); // Use food.id to match the unique identifier
+    } else {
+      // Add the food to the bucket
+      dispatch(likeFood(food));
+    }
   };
 
   const filteredFoods = resFoods.filter((food) =>
@@ -115,8 +119,8 @@ function RestaurantPage() {
           <div className='px-2 flex flex-col gap-3 pt-2'>
             {filteredFoods.length > 0 ? (
               filteredFoods.map((food) => {
-                
-                const isLiked = likedFoods.includes(food.id);
+                const isInBucket = bucket.some(item => item.name === food.name); // Check if the food is in the bucket
+
                 return (
                   <div key={food.id} className='flex gap-2 max-h-[120px] min-h-[120px] py-2 px-2 shadow-lg rounded-md bg-white'>
                     <div className='max-w-[30vw] min-w-[30vw] h-[100px]'>
@@ -140,7 +144,7 @@ function RestaurantPage() {
                           onClick={(e) => handleLike(e, food)}
                           className="focus:outline-none"
                         >
-                          {isLiked ? (
+                          {isInBucket ? (
                             <FaHeart className='text-red-600' />
                           ) : (
                             <FaRegHeart className='text-[#212121]' />
@@ -162,3 +166,4 @@ function RestaurantPage() {
 }
 
 export default RestaurantPage;
+

@@ -43,7 +43,7 @@ const Bucket = () => {
                       {item.regularPrice}
                     </div>
                     <button
-                      onClick={() => handleRemove(item.id)}
+                      onClick={() => handleRemove(item._id)}
                       className="bg-red-500 text-xs px-2 py-1 text-white rounded-md"
                     >
                       Remove

@@ -24,12 +24,9 @@ export const foodSlice = createSlice({
     dislikeFood: (state, action) => {
       state.currentIndex += 1;
     },
-    incrementIndex: (state) => {
-      state.currentIndex += 1;
-    },
     removeFromBucket: (state, action) => {
       const foodId = action.payload;
-      state.bucket = state.bucket.filter(item => item.id !== foodId);
+      state.bucket = state.bucket.filter(item => item._id !== foodId);
     },
     resetIndex: (state) => {
       state.currentIndex = 0;
