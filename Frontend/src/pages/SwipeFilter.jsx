@@ -82,31 +82,24 @@ const SwipeFilter = () => {
     console.log("Like action triggered", currentFood);
 
     if (randomItem && currentFood._id !== randomItem._id) {
+      dispatch(dislikeFood()); // Update index before showing mismatch popup
       setMatchFailed(true);
       setTimeout(() => {
         setMatchFailed(false);
-        dispatch({ type: 'food/incrementIndex' });
-        updateCard();
       }, 2000);
       return;
     }
 
-    dispatch(likeFood(currentFood));
+    dispatch(likeFood(currentFood)); // Update index and add to bucket
     setLikePopup(true);
     handleButtonHighlight('like');
-
-    dispatch({ type: 'food/incrementIndex' });
-    updateCard();
   }, [dispatch, randomItem]);
 
   const handleDislike = useCallback((currentFood) => {
     if (!currentFood) return;
     console.log("Dislike action triggered");
-    dispatch(dislikeFood(currentFood.id));
+    dispatch(dislikeFood());
     handleButtonHighlight('dislike');
-
-    dispatch({ type: 'food/incrementIndex' });
-    updateCard();
   }, [dispatch]);
 
   const updateCard = useCallback(() => {
@@ -117,8 +110,7 @@ const SwipeFilter = () => {
         foodName: nextFood.name,
         price: nextFood.regularPrice,
         onDismiss: () => {
-          dispatch({ type: 'food/incrementIndex' });
-          updateCard();
+          dispatch(dislikeFood());
         },
         onLike: () => handleLike(nextFood),
         onDislike: () => handleDislike(nextFood),
