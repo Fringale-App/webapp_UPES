@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://fringale-app.onrender.com/',
+        target: 'https://fringale-app.onrender.com',
         secure: false,
       },
     },
