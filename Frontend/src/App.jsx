@@ -34,15 +34,17 @@ function App() {
             <Route path="/bidholi" element={<Home />} />
             <Route path="/kandholi" element={<Home />} />
             
-            <Route path="/swipe-filter" element={<SwipeFilter />} />
+            
             <Route path="/food-filter" element={<Filter />} />
             <Route path="/search" element={<Search />} />
             <Route path="/restaurant/:id" element={<RestaurantPage />} />
-            <Route path="/bucket" element={<Bucket />} />
+            
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/popup" element={<PopUp />} />
             <Route element={<PrivateComponent />}>
+              <Route path="/bucket" element={<Bucket />} />
+              <Route path="/swipe-filter" element={<SwipeFilter />} />
               <Route path='/profile' element={<Profile />} />
             </Route>
 
