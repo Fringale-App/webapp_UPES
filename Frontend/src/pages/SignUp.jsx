@@ -48,7 +48,7 @@ function SignUp() {
     
         try {
             dispatch(signUpStart()); // Dispatch sign up start action
-            const result = await fetch('http://localhost:3000/api/user/signup', {
+            const result = await fetch('/api/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
