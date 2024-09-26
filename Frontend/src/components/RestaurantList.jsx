@@ -19,7 +19,7 @@ const RestaurantList = ({ campus }) => {
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
-                const restaurantRes = await fetch('http://localhost:3000/api/restaurant/get');
+                const restaurantRes = await fetch('/api/restaurant/get');
                 const resData = await restaurantRes.json();
                 setRestaurants(resData);
             } catch (error) {
