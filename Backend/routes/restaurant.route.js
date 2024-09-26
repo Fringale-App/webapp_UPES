@@ -8,5 +8,5 @@ router.post('/insertmany',insertManyRestaurants)
 router.get('/get/:id',getRestaurant)
 router.get('/get',getRestaurants)
 router.post('/update/:id',verifyToken,updateRestaurant)
-router.get('/foods/:id',verifyToken,getResFoods)
+router.get('/foods/:id',getResFoods)
 export default router
