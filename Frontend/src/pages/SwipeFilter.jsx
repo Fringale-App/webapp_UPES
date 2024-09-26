@@ -109,6 +109,7 @@ const SwipeFilter = () => {
         imageUrl: nextFood.imageUrls,
         foodName: nextFood.name,
         price: nextFood.regularPrice,
+        description:nextFood.description,
         onDismiss: () => {
           dispatch(dislikeFood());
         },

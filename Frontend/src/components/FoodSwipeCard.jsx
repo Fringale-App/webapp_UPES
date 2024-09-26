@@ -1,11 +1,12 @@
 class Card {
-  constructor({ imageUrl,foodName,price, onDismiss, onLike, onDislike }) {
+  constructor({ imageUrl,foodName,price,description, onDismiss, onLike, onDislike }) {
     this.imageUrl = imageUrl;
     this.price = price
     this.onDismiss = onDismiss;
     this.onLike = onLike;
     this.onDislike = onDislike;
-    this.name = foodName
+    this.description = description;
+    this.name = foodName;
     this.init();
   }
 
@@ -87,7 +88,7 @@ class Card {
     // Add description
     const description = document.createElement("p");
     description.classList.add("mt-2", "text-sm");
-    description.textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+    description.textContent = this.description.slice(0,30)+"..."
 
     bottomSection.appendChild(description);
 
