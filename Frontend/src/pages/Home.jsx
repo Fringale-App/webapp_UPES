@@ -12,6 +12,64 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current path
 
+
+  const getUserLocation = () => {
+    const userId = currentUser?._id; // Access user ID from `currentUser.data`
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+  
+          if (userId) {
+            updateLocationOnBackend(userId, latitude, longitude);
+          } else {
+            console.error("User ID is not available");
+          }
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
+  
+
+  // Function to send location to backend
+  const updateLocationOnBackend = async (userId, latitude, longitude) => {
+    try {
+      console.log('Sending Data:', { userId, latitude, longitude });  
+      const response = await fetch('/api/user/update-location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          latitude,
+          longitude,
+        }),
+      });
+      const data = await response.json();  // Check the response format
+      console.log('Response Data:', data);
+      if (data.success) {
+        console.log("Location updated successfully");
+      } else {
+        console.log("Failed to update location");
+      }
+    } catch (error) {
+      console.error("Error sending location:", error);
+    }
+  };
+  // Call getUserLocation when the component mounts
+  useEffect(() => {
+   if(currentUser){
+    getUserLocation();
+   }
+  }, [currentUser]);  // Dependency array ensures it runs if currentUser changes
+
   // This function will update both the state and the URL without reloading the page
   const handleCampusChange = (campus) => {
     setSelected(campus); // Update the state (campus selection)
