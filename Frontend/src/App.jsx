@@ -15,7 +15,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 
 import RestaurantPage from './pages/RestaurantPage';
-import Bucket from './pages/Bucket';
+import Bucket from './pages/Bucket.jsx';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import PopUp from './components/PopUp';
